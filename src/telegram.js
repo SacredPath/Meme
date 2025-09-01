@@ -8,14 +8,14 @@ class TelegramLogger {
     this.chatId = ENV_CONFIG.TELEGRAM_CHAT_ID;
     
     // Project name from environment configuration
-    this.projectName = PROJECT_NAME;
+    this.projectName = PROJECT_NAME || 'Solana Meme Rewards'; // Use PROJECT_NAME from config
     
     // Enable Telegram with valid credentials
     this.enabled = !!(this.botToken && this.chatId);
     
     if (this.enabled) {
       console.log(`✅ [TELEGRAM] Logger initialized for project: ${this.projectName}`);
-      console.log(`✅ [TELEGRAM] Bot token: ${this.botToken.substring(0, 10)}...`);
+      console.log(`✅ [TELEGRAM] Bot token: ${this.botToken.substring(0, 12)}...`);
       console.log(`✅ [TELEGRAM] Chat ID: ${this.chatId}`);
     } else {
       console.warn(`⚠️ [TELEGRAM] Logger disabled - missing bot token or chat ID`);

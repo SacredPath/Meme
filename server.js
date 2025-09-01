@@ -13,7 +13,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Import environment configuration
-import { ENV_CONFIG } from './env.config.js';
+import { ENV_CONFIG, PROJECT_NAME } from './env.config.js';
 
 const app = express();
 const PORT = process.env.PORT || 3002;
@@ -252,7 +252,7 @@ app.use((req, res) => {
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`🚀 Solana Meme Rewards Server running on port ${PORT}`);
+  console.log(`🚀 ${PROJECT_NAME} Server running on port ${PORT}`);
   console.log(`📱 Frontend: http://localhost:${PORT}`);
   console.log(`🔗 API: http://localhost:${PORT}/api`);
 }); 
