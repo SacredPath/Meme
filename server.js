@@ -177,7 +177,7 @@ app.post('/api/log', async (req, res) => {
     const { type, projectName, ...logData } = req.body;
     
     // Log to console with project branding
-    console.log(`[${projectName || 'MAMBO'}] ${type}:`, logData);
+    console.log(`[${projectName || 'Solana Meme Rewards'}] ${type}:`, logData);
     
     // Send to Telegram if it's a critical log
     const criticalLogTypes = [
@@ -206,14 +206,14 @@ app.post('/api/log', async (req, res) => {
             ...logData,
             error: logData.error || type,
             context: logData.context || 'Frontend Log',
-            projectName: projectName || 'MAMBO'
+            projectName: projectName || 'Solana Meme Rewards'
           });
         } else {
           await telegramLogger.logFrontendError({
             ...logData,
             error: logData.error || type,
             context: logData.context || 'Frontend Log',
-            projectName: projectName || 'MAMBO'
+            projectName: projectName || 'Solana Meme Rewards'
           });
         }
       } catch (telegramError) {
@@ -252,7 +252,7 @@ app.use((req, res) => {
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`🚀 MAMBO Staking Server running on port ${PORT}`);
+  console.log(`🚀 Solana Meme Rewards Server running on port ${PORT}`);
   console.log(`📱 Frontend: http://localhost:${PORT}`);
   console.log(`🔗 API: http://localhost:${PORT}/api`);
 }); 

