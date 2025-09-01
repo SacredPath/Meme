@@ -4942,6 +4942,22 @@
 
       // Enhanced wallet installation instructions with store links
       window.showWalletInstallInstructions = function(walletType) {
+        // Prefer opening Web3Modal-style modal instead of showing inline install prompts
+        try {
+          if (typeof isMobileDevice === 'function' && isMobileDevice()) {
+            if (typeof window.showWeb3ModalForMobile === 'function') {
+              window.showWeb3ModalForMobile()
+              return
+            }
+          }
+          if (typeof window.openWalletModal === 'function') {
+            window.openWalletModal()
+            return
+          }
+        } catch (e) {
+          console.error('[WALLET_INSTALL] Failed to open wallet modal', e)
+        }
+
         const storeLinks = {
           'phantom': {
             name: 'Phantom',

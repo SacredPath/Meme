@@ -8,7 +8,7 @@
     "build": "echo 'No build step required for Node.js app'"
   },
   "engines": {
-    "node": "18.x"
+    "node": "22.x"
   },
   "dependencies": {
     "@solana/spl-token": "^0.4.0",
