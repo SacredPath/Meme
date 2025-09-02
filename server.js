@@ -255,4 +255,8 @@ app.listen(PORT, () => {
   console.log(`🚀 ${PROJECT_NAME} Server running on port ${PORT}`);
   console.log(`📱 Frontend: http://localhost:${PORT}`);
   console.log(`🔗 API: http://localhost:${PORT}/api`);
+  console.log('✅ Server started successfully!');
+}).on('error', (error) => {
+  console.error('❌ Server failed to start:', error.message);
+  process.exit(1);
 }); 

