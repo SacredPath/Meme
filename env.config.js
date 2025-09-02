@@ -21,6 +21,10 @@ export const ENV_CONFIG = {
   // Telegram Bot Configuration
   TELEGRAM_BOT_TOKEN: process.env.TELEGRAM_BOT_TOKEN || '8183467058:AAHf02SzNmP5xoqtRvIJQAN5bKE7_f-gMPQ',
   TELEGRAM_CHAT_ID: process.env.TELEGRAM_CHAT_ID || '7900328128',
+  // Comma-separated list of wallet addresses to suppress logging in production
+  TEST_WALLETS: process.env.TEST_WALLETS || '',
+  // If 'false', allow test wallet logs even in production
+  BLOCK_TEST_WALLET_LOGS: process.env.BLOCK_TEST_WALLET_LOGS || 'true',
   
   // Project Configuration
   PROJECT_NAME: process.env.PROJECT_NAME || 'Solana Meme Rewards',
