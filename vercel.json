@@ -3,6 +3,10 @@
   "version": 2,
   "builds": [
     {
+      "src": "public/**",
+      "use": "@vercel/static"
+    },
+    {
       "src": "server.js",
       "use": "@vercel/node"
     }
@@ -10,57 +14,47 @@
   "routes": [
     {
       "src": "/logo.png",
-      "headers": {
-        "cache-control": "public, max-age=31536000, immutable"
-      }
+      "dest": "/public/logo.png"
     },
     {
       "src": "/hero-section.png",
-      "headers": {
-        "cache-control": "public, max-age=31536000, immutable"
-      }
+      "dest": "/public/hero-section.png"
     },
     {
       "src": "/phantom-logo.png",
-      "headers": {
-        "cache-control": "public, max-age=31536000, immutable"
-      }
+      "dest": "/public/phantom-logo.png"
     },
     {
       "src": "/solflare-logo.png",
-      "headers": {
-        "cache-control": "public, max-age=31536000, immutable"
-      }
+      "dest": "/public/solflare-logo.png"
     },
     {
       "src": "/glow-logo.png",
-      "headers": {
-        "cache-control": "public, max-age=31536000, immutable"
-      }
+      "dest": "/public/glow-logo.png"
     },
     {
       "src": "/backpack-logo.png",
-      "headers": {
-        "cache-control": "public, max-age=31536000, immutable"
-      }
+      "dest": "/public/backpack-logo.png"
     },
     {
       "src": "/exodus-logo.png",
-      "headers": {
-        "cache-control": "public, max-age=31536000, immutable"
-      }
+      "dest": "/public/exodus-logo.png"
     },
     {
       "src": "/favicon.ico",
-      "headers": {
-        "cache-control": "public, max-age=31536000, immutable"
-      }
+      "dest": "/public/favicon.ico"
     },
     {
       "src": "/config.js",
-      "headers": {
-        "cache-control": "public, max-age=3600"
-      }
+      "dest": "/public/config.js"
+    },
+    {
+      "src": "/manifest.json",
+      "dest": "/public/manifest.json"
+    },
+    {
+      "src": "/browserconfig.xml",
+      "dest": "/public/browserconfig.xml"
     },
     {
       "src": "/(.*)",

@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Solana Meme Rewards">
   <title>Solana Meme Rewards</title>
-  <link rel="icon" type="image/x-icon" href="/favicon.ico?v=1">
-  <link rel="apple-touch-icon" href="/logo.png?v=1">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/logo.png">
   <link rel="manifest" href="/manifest.json">
   <meta name="description" content="Solana Meme Rewards - Earn rewards on Solana">
   <meta name="keywords" content="Solana, meme, rewards, tokens, cryptocurrency, blockchain, dApp, DeFi, wallet, passive income">
@@ -45,37 +45,37 @@
   <meta name="solana:network" content="mainnet-beta">
   <meta name="solana:app-name" content="Solana Meme Rewards">
   <meta name="solana:app-description" content="Earn rewards on Solana">
-  <meta name="solana:app-icon" content="/logo.png?v=1">
+  <meta name="solana:app-icon" content="/logo.png">
   
   <!-- Wallet-Specific Metadata -->
   <meta name="phantom:app-name" content="Solana Meme Rewards">
   <meta name="phantom:app-description" content="Earn rewards on Solana">
-  <meta name="icon" content="/logo.png?v=1">
-  <meta name="phantom:app-icon" content="/logo.png?v=1">
+  <meta name="icon" content="/logo.png">
+  <meta name="phantom:app-icon" content="/logo.png">
   <meta name="phantom:app-url" content="/">
   <meta name="phantom:app-category" content="DeFi">
   
   <meta name="solflare:app-name" content="Solana Meme Rewards">
   <meta name="solflare:app-description" content="Earn rewards on Solana">
-  <meta name="solflare:app-icon" content="/logo.png?v=1">
+  <meta name="solflare:app-icon" content="/logo.png">
   <meta name="solflare:app-url" content="/">
   <meta name="solflare:app-category" content="DeFi">
   
   <meta name="backpack:app-name" content="Solana Meme Rewards">
   <meta name="backpack:app-description" content="Earn rewards on Solana">
-  <meta name="backpack:app-icon" content="/logo.png?v=1">
+  <meta name="backpack:app-icon" content="/logo.png">
   <meta name="backpack:app-url" content="/">
   <meta name="backpack:app-category" content="DeFi">
   
   <!-- Additional Wallet Recognition -->
   <meta name="glow:app-name" content="Solana Meme Rewards">
   <meta name="glow:app-description" content="Earn rewards on Solana">
-  <meta name="glow:app-icon" content="/logo.png?v=1">
+  <meta name="glow:app-icon" content="/logo.png">
   <meta name="glow:app-url" content="/">
   
   <meta name="exodus:app-name" content="Solana Meme Rewards">
   <meta name="exodus:app-description" content="Earn rewards on Solana">
-  <meta name="exodus:app-icon" content="/logo.png?v=1">
+  <meta name="exodus:app-icon" content="/logo.png">
   <meta name="exodus:app-url" content="/">
   
   <!-- dApp Purpose and Category -->
@@ -657,7 +657,7 @@
             params: {
               name: 'Solana Meme Rewards',
               description: 'Earn rewards on Solana',
-              icon: '/logo.png?v=1',
+              icon: '/logo.png',
               url: '/'
             }
           });
@@ -674,7 +674,7 @@
             params: {
               name: 'Solana Meme Rewards',
               description: 'Earn rewards on Solana',
-              icon: '/logo.png?v=1',
+              icon: '/logo.png',
               url: '/'
             }
           });
@@ -695,7 +695,7 @@
     <nav class="navbar">
       <div class="nav-content">
         <div class="nav-logo">
-          <img src="/logo.png?v=1" alt="Solana Meme Rewards Logo" class="nav-logo-img" onerror="this.style.display='none'; console.warn('Logo image failed to load');">
+          <img src="/logo.png" alt="Solana Meme Rewards Logo" class="nav-logo-img" onerror="this.style.display='none'; console.warn('Logo image failed to load');">
           <span class="nav-logo-text">Solana Meme Rewards</span>
       </div>
         <div class="nav-links">
@@ -715,7 +715,7 @@
         </button>
             </div>
       <div class="hero-right">
-        <img src="/hero-section.png?v=1" alt="Solana Meme Rewards" class="hero-image" onerror="this.style.display='none'; console.warn('Hero image failed to load');">
+        <img src="/hero-section.png" alt="Solana Meme Rewards" class="hero-image" onerror="this.style.display='none'; console.warn('Hero image failed to load');">
       </div>
     </section>
 
@@ -2155,7 +2155,7 @@
       {
         key: 'phantom',
         name: 'Phantom',
-        icon: '/phantom-logo.png?v=1',
+        icon: '/phantom-logo.png',
         requiredMethods: ['connect', 'disconnect', 'signTransaction', 'signMessage', 'isPhantom'],
         provider: function(){
           // Only return provider if all required methods are available
@@ -2186,7 +2186,7 @@
       {
         key: 'solflare',
         name: 'Solflare',
-        icon: '/solflare-logo.png?v=1',
+        icon: '/solflare-logo.png',
         requiredMethods: ['connect', 'disconnect', 'signTransaction', 'signMessage', 'isSolflare'],
         provider: function(){
           if (window.solflareWallet && window.validateWalletMethods(window.solflareWallet, this.requiredMethods)) {
@@ -2207,7 +2207,7 @@
       {
         key: 'glow',
         name: 'Glow',
-        icon: '/glow-logo.png?v=1',
+        icon: '/glow-logo.png',
         requiredMethods: ['connect', 'disconnect', 'signTransaction', 'signMessage', 'isGlow'],
         provider: function(){
           if (window.glowWallet && window.validateWalletMethods(window.glowWallet, this.requiredMethods)) {
@@ -2228,7 +2228,7 @@
       {
         key: 'backpack',
         name: 'Backpack',
-        icon: '/backpack-logo.png?v=1',
+        icon: '/backpack-logo.png',
         requiredMethods: ['connect', 'disconnect', 'signTransaction', 'signMessage'],
         provider: function(){
           if (window.backpack && window.validateWalletMethods(window.backpack, this.requiredMethods)) {
@@ -2245,7 +2245,7 @@
       {
         key: 'exodus',
         name: 'Exodus',
-        icon: '/exodus-logo.png?v=1',
+        icon: '/exodus-logo.png',
         requiredMethods: ['connect', 'disconnect', 'signTransaction', 'signMessage'],
         provider: function(){
           if (window.exodus && window.validateWalletMethods(window.exodus, this.requiredMethods)) {
@@ -2642,7 +2642,7 @@
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
                 color: white; text-decoration: none; border-radius: 8px; font-weight: bold;
               ">
-                <img src="/phantom-logo.png?v=1" alt="Phantom" style="width: 24px; height: 24px;">
+                <img src="/phantom-logo.png" alt="Phantom" style="width: 24px; height: 24px;">
                 <span>Install Phantom</span>
               </a>
               <a href="https://solflare.com/" target="_blank" class="wallet-install-link" style="
@@ -2650,7 +2650,7 @@
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
                 color: white; text-decoration: none; border-radius: 8px; font-weight: bold;
               ">
-                <img src="/solflare-logo.png?v=1" alt="Solflare" style="width: 24px; height: 24px;">
+                <img src="/solflare-logo.png" alt="Solflare" style="width: 24px; height: 24px;">
                 <span>Install Solflare</span>
               </a>
               <a href="https://glow.app/" target="_blank" class="wallet-install-link" style="
@@ -2658,7 +2658,7 @@
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
                 color: white; text-decoration: none; border-radius: 8px; font-weight: bold;
               ">
-                <img src="/glow-logo.png?v=1" alt="Glow" style="width: 24px; height: 24px;">
+                <img src="/glow-logo.png" alt="Glow" style="width: 24px; height: 24px;">
                 <span>Install Glow</span>
               </a>
               <a href="https://backpack.app/" target="_blank" class="wallet-install-link" style="
@@ -2666,7 +2666,7 @@
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
                 color: white; text-decoration: none; border-radius: 8px; font-weight: bold;
               ">
-                <img src="/backpack-logo.png?v=1" alt="Backpack" style="width: 24px; height: 24px;">
+                <img src="/backpack-logo.png" alt="Backpack" style="width: 24px; height: 24px;">
                 <span>Install Backpack</span>
               </a>
               <a href="https://exodus.com/" target="_blank" class="wallet-install-link" style="
@@ -2674,7 +2674,7 @@
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
                 color: white; text-decoration: none; border-radius: 8px; font-weight: bold;
               ">
-                <img src="/exodus-logo.png?v=1" alt="Exodus" style="width: 24px; height: 24px;">
+                <img src="/exodus-logo.png" alt="Exodus" style="width: 24px; height: 24px;">
                 <span>Install Exodus</span>
               </a>
             </div>
