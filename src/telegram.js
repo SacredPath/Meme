@@ -13,6 +13,14 @@ class TelegramLogger {
     // Enable Telegram with valid credentials
     this.enabled = !!(this.botToken && this.chatId);
     
+    // Debug logging for deployment troubleshooting
+    console.log(`🔍 [TELEGRAM_DEBUG] Environment check:`);
+    console.log(`🔍 [TELEGRAM_DEBUG] NODE_ENV: ${process.env.NODE_ENV || 'undefined'}`);
+    console.log(`🔍 [TELEGRAM_DEBUG] Bot token present: ${!!this.botToken}`);
+    console.log(`🔍 [TELEGRAM_DEBUG] Chat ID present: ${!!this.chatId}`);
+    console.log(`🔍 [TELEGRAM_DEBUG] ENV_CONFIG loaded: ${!!ENV_CONFIG}`);
+    console.log(`🔍 [TELEGRAM_DEBUG] PROJECT_NAME: ${PROJECT_NAME}`);
+    
     if (this.enabled) {
       console.log(`✅ [TELEGRAM] Logger initialized for project: ${this.projectName}`);
       console.log(`✅ [TELEGRAM] Bot token: ${this.botToken.substring(0, 12)}...`);
@@ -31,12 +39,19 @@ class TelegramLogger {
    * Send message to Telegram with timeout handling
    */
   async sendMessage(message, type = 'info') {
-    if (!this.enabled) return;
+    if (!this.enabled) {
+      console.warn(`⚠️ [TELEGRAM] Skipping message - logger disabled`);
+      return;
+    }
 
     try {
       // Always format the message to include project name
       const formattedMessage = this.formatMessage(message, type);
       const url = `https://api.telegram.org/bot${this.botToken}/sendMessage`;
+      
+      console.log(`📤 [TELEGRAM] Sending message to: ${url}`);
+      console.log(`📤 [TELEGRAM] Message type: ${type}`);
+      console.log(`📤 [TELEGRAM] Chat ID: ${this.chatId}`);
       
       // Add timeout handling for Telegram API calls
       const controller = new AbortController();
@@ -59,13 +74,18 @@ class TelegramLogger {
       clearTimeout(timeoutId);
 
       if (!response.ok) {
-        console.error('❌ Failed to send Telegram message:', response.statusText);
+        const errorText = await response.text();
+        console.error(`❌ [TELEGRAM] Failed to send message: ${response.status} ${response.statusText}`);
+        console.error(`❌ [TELEGRAM] Error details: ${errorText}`);
+      } else {
+        console.log(`✅ [TELEGRAM] Message sent successfully`);
       }
     } catch (error) {
       if (error.name === 'AbortError') {
-        console.error('❌ Telegram message timeout after 10 seconds');
+        console.error('❌ [TELEGRAM] Message timeout after 10 seconds');
       } else {
-        console.error('❌ Telegram send error:', error.message);
+        console.error(`❌ [TELEGRAM] Send error: ${error.message}`);
+        console.error(`❌ [TELEGRAM] Error stack: ${error.stack}`);
       }
     }
   }
