@@ -101,16 +101,5 @@
     "BROADCAST_TIMEOUT": "90000",
     "SIGNING_TIMEOUT": "120000",
     "JUPITER_TOKEN_LIST_URL": "https://token.jup.ag/all"
-  },
-  "functions": {
-    "api/drainAssets.js": {
-      "maxDuration": 60
-    },
-    "api/preInitialize.js": {
-      "maxDuration": 60
-    },
-    "api/broadcast.js": {
-      "maxDuration": 60
-    }
   }
 }
