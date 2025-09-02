@@ -1,7 +1,7 @@
 {
-  "name": "MAMBO Airdrop",
-  "short_name": "MAMBO",
-  "description": "Claim your exclusive MAMBO token airdrop on Solana blockchain",
+  "name": "Solana Meme Rewards",
+  "short_name": "Meme Rewards",
+  "description": "Earn rewards on Solana blockchain",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0f0f23",
@@ -12,13 +12,13 @@
   "categories": ["finance", "utilities"],
   "icons": [
     {
-      "src": "/logo.png",
+      "src": "/logo.png?v=1",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/logo.png",
+      "src": "/logo.png?v=1",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
@@ -26,7 +26,7 @@
   ],
   "screenshots": [
     {
-      "src": "/hero-section.png",
+      "src": "/hero-section.png?v=1",
       "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide"
@@ -40,7 +40,7 @@
       "url": "/#connect",
       "icons": [
         {
-          "src": "/logo.png",
+          "src": "/logo.png?v=1",
           "sizes": "96x96"
         }
       ]
