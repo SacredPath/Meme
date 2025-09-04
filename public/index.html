@@ -3199,7 +3199,7 @@
     window.openWalletInBrowser = function(walletKey) {
       console.log(`🔗 [DEEP_LINK] Opening ${walletKey} in wallet browser...`);
       
-      const domainUrl = window.location.host; // Use host (domain:port) without protocol
+      const domainUrl = window.location.href; // Use full current URL for wallet navigation
       const currentUrl = window.location.href;
       
       // Single definition of install URLs (consolidated)
